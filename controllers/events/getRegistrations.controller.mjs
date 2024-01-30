@@ -1,5 +1,6 @@
 import { AppError } from "../../utils/index.js";
 import { projectDomains } from "../../static/eventsData.mjs";
+import { eventsQueries } from "../../models/queries/events/events.queries.mjs";
 
 function getRegistrationsController(
   eventsServices,
@@ -26,6 +27,17 @@ function getRegistrationsController(
     }
   }
 
+  async function getEventCount(req, res, next) {
+    try {
+      const result = await eventsServices.getEventCount(); 
+      // console.log(result);
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+
   async function getRegistration(req, res, next) {
     try {
       const results = await eventsServices.getTicketDetails(req.query.ticket);
@@ -51,7 +63,7 @@ function getRegistrationsController(
         req.params.event_name
       );
       if (!results) throw new AppError(404, "fail", "No registrations found");
-      res.status(302).json(results);
+      res.status(200).json(results);
     } catch (err) {
       next(err);
     }
@@ -146,6 +158,7 @@ function getRegistrationsController(
     getUserIDFile,
     getPendingPayments,
     getSynopsis,
+    getEventCount
   };
 }
 

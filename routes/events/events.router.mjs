@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import { getRegistrationsController, createRegistrationsController } from '../../controllers/index.js';
-
 const eventsRouter = Router()
 
 function createEventsRouter(eventsServices, filesServices, emailService, middlewares, eventsValidations, adminValidations , docServices) {
     const { registrationLimiter, verifyAdminLogin, validator, memberIDParser, formDataParser } = middlewares
     const { getPaymentValidation, ticketValidation, getRegistrationValidation, paymentValidation, fileValidation, eventNameParamValidation, getUserRegistrationValidation, projectValidation, memberValidation, collegeValidation, verifyPICTOrPayments } = eventsValidations
     const { verifyAdminValidation } = adminValidations
-    const { getPaymentDetails, getTicketDetails, getUserIDFile, getUserRegistration, getRegistration, getRegistrations, getPendingPayments, getSynopsis } = getRegistrationsController(eventsServices, filesServices , docServices)
+    const { getPaymentDetails, getTicketDetails, getUserIDFile, getUserRegistration, getRegistration, getRegistrations, getPendingPayments, getSynopsis, getEventCount } = getRegistrationsController(eventsServices, filesServices , docServices)
     const { saveProject, insertMember, saveCollegeDetails, requestRegistration, verifyPendingPayment , updateProject , insertInternalPICT } = createRegistrationsController(eventsServices, filesServices, emailService)
     eventsRouter.get('/registrations/:event_name', verifyAdminValidation(2), validator, verifyAdminLogin, getRegistrations)
     eventsRouter.get('/verify/:event_name', eventNameParamValidation(), getPaymentValidation(), verifyAdminValidation(3), validator, verifyAdminLogin, getPaymentDetails)
@@ -25,6 +24,7 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
     eventsRouter.post('/:event_name/step_2', memberIDParser, formDataParser, eventNameParamValidation(), ticketValidation(), memberValidation(), validator, insertMember)
     eventsRouter.post('/:event_name/step_3', eventNameParamValidation(), ticketValidation(), collegeValidation(), validator, saveCollegeDetails)
     eventsRouter.post('/:event_name/step_4', eventNameParamValidation(), ticketValidation(), verifyPICTOrPayments(), validator, requestRegistration)
+    eventsRouter.get('/geteventcount', getEventCount)
 
     return eventsRouter
 }

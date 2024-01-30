@@ -12,6 +12,14 @@ function eventsQueries(tableName) {
         }
     }
 
+    const getEventCount = () => {
+        return {
+            concepts: `SELECT COUNT(DISTINCT pid) AS eventCount FROM ${tableName.conceptsUsersTable};`,
+            impetus: `SELECT COUNT(DISTINCT pid) AS eventCount FROM ${tableName.impetusUsersTable};`,
+            pradnya: `SELECT COUNT(DISTINCT pid) AS eventCount FROM ${tableName.pradnyaUsersTable};`,
+        };
+    }
+
     const completeRegistration = (event_name, no_of_members) => {
         let placeholders = ''
         for (let i = 0; i < no_of_members; i++) placeholders += ', ?, ?, ?, ?'
@@ -38,8 +46,6 @@ function eventsQueries(tableName) {
 
     const updateProject = (data) => `UPDATE _projects INNER JOIN ${data.event_name}_group_info ON ${data.event_name}_projects.pid = ${data.event_name}_group_info.pid SET ${data.event_name}_projects.title = :title, ${data.event_name}_projects.abstract = :abstract, ${data.event_name}_group_info.mode = :mode WHERE ${data.event_name}_projects.pid = :pid;`
 
-    
-
     return {
         checkUserRegistration,
         completeRegistration,
@@ -48,7 +54,8 @@ function eventsQueries(tableName) {
         getRegistrations,
         getProjects,
         getProject,
-        updateProject
+        updateProject,
+        getEventCount // Call the function here
     }
 }
 
