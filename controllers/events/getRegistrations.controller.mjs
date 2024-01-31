@@ -27,17 +27,6 @@ function getRegistrationsController(
     }
   }
 
-  async function getEventCount(req, res, next) {
-    try {
-      const result = await eventsServices.getEventCount(); 
-      // console.log(result);
-      res.status(200).json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-
   async function getRegistration(req, res, next) {
     try {
       const results = await eventsServices.getTicketDetails(req.query.ticket);
@@ -157,8 +146,7 @@ function getRegistrationsController(
     getPaymentDetails,
     getUserIDFile,
     getPendingPayments,
-    getSynopsis,
-    getEventCount
+    getSynopsis
   };
 }
 

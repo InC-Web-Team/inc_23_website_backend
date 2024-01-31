@@ -16,35 +16,6 @@ function eventsServices(db) {
     }
   }
 
-
-  async function getEventCount(){
-    try {
-      const queries = eventsQueries.getEventCount();
-
-      const [conceptsResults] = await db.execute(queries.concepts).catch((err) => {
-          throw new AppError(400, "fail", err.sqlMessage);
-      });
-
-      const [impetusResults] = await db.execute(queries.impetus).catch((err) => {
-          throw new AppError(400, "fail", err.sqlMessage);
-      });
-
-      const [pradnyaResults] = await db.execute(queries.pradnya).catch((err) => {
-          throw new AppError(400, "fail", err.sqlMessage);
-      });
-
-      const result = {
-          concepts: conceptsResults[0].eventCount,
-          impetus: impetusResults[0].eventCount,
-          pradnya: pradnyaResults[0].eventCount,
-      };
-
-      return result
-    } catch (error) {
-        throw error
-    }
-  }
-
   async function getRegistrations(event_name) {
     try {
       const [results] = await db
@@ -923,8 +894,7 @@ function eventsServices(db) {
     getProject,
     updateProject,
     insertPICT,
-    insertImpetusPICT,
-    getEventCount
+    insertImpetusPICT
   };
 }
 

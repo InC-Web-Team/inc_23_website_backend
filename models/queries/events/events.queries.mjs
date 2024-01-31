@@ -12,14 +12,6 @@ function eventsQueries(tableName) {
         }
     }
 
-    const getEventCount = () => {
-        return {
-            concepts: `SELECT COUNT(DISTINCT pid) AS eventCount FROM ${tableName.conceptsUsersTable};`,
-            impetus: `SELECT COUNT(DISTINCT pid) AS eventCount FROM ${tableName.impetusUsersTable};`,
-            pradnya: `SELECT COUNT(DISTINCT pid) AS eventCount FROM ${tableName.pradnyaUsersTable};`,
-        };
-    }
-
     const completeRegistration = (event_name, no_of_members) => {
         let placeholders = ''
         for (let i = 0; i < no_of_members; i++) placeholders += ', ?, ?, ?, ?'
@@ -54,8 +46,7 @@ function eventsQueries(tableName) {
         getRegistrations,
         getProjects,
         getProject,
-        updateProject,
-        getEventCount // Call the function here
+        updateProject
     }
 }
 
