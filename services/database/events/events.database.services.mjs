@@ -38,7 +38,7 @@ function eventsServices(db) {
         });
       return results[0];
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       throw err;
     }
   }
@@ -88,6 +88,7 @@ function eventsServices(db) {
     }
   }
 
+  
   async function editStepData(ticket, step_no, data) {
     try {
       const [results] = await db
@@ -641,7 +642,7 @@ function eventsServices(db) {
 
       return results[0];
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       throw err;
     }
   }

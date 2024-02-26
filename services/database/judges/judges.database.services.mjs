@@ -51,6 +51,7 @@ function judgesServices(db) {
 
   async function loginJudge(data) {
     try {
+    // console.log(data)
       const [results] = await db
         .execute(
           { sql: judgesQueries.loginJudge, namedPlaceholders: true },
@@ -99,7 +100,7 @@ function judgesServices(db) {
       switch (event_name) {
         case eventsName[1]:
           await db.execute({ sql: judgesQueries.insertImpetusEvaluation, namedPlaceholders: true }, data).catch(err => {
-            console.log(err);
+            // console.log(err);
             throw new AppError(400, 'fail', err.sqlMessage)
           })
           break
@@ -131,10 +132,10 @@ function judgesServices(db) {
   }
 
   return {
+    loginJudge,
     getJudge,
     getJudges,
     insertJudge,
-    loginJudge,
     getAllocatedProjects,
     modifySlots,
     evaluateProject,
