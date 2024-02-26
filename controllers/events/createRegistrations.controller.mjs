@@ -36,6 +36,7 @@ function createRegistrationsController(
       const { event_name } = req.params;
       let { ticket } = req.signedCookies;
       // console.log(ticket)
+      // console.log(ticket)
       const { email } = req.body;
       const user_email = await eventsServices.getUserRegistration(
         event_name,
@@ -115,6 +116,7 @@ function createRegistrationsController(
   async function requestRegistration(req, res, next) {
     try {
       const { ticket } = req.signedCookies;
+      // console.log(ticket);
       let results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.payment_id !== "")
@@ -124,7 +126,7 @@ function createRegistrationsController(
           "Registration done using this ticket and payment under verification"
         );
       else if (results.step_no === 3) {
-        const { isPICT, isInternational } = req.body;
+        const { isPICT, isInternational, techfiesta } = req.body;
         if (isPICT === "1") {
           req.body = { ...req.body, payment_id: "PICT" };
         } else if (isInternational === "1") {
@@ -151,6 +153,7 @@ function createRegistrationsController(
       const results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.step_no === 4) {
+
         // console.log(results);
 
         const { pid } = await eventsServices.completeRegistration(
@@ -209,7 +212,7 @@ function createRegistrationsController(
         email: req.body.email,
         department: req.body.department
       };
-      console.log(newData);
+      // console.log(newData);
       // switch (event_name) {
       //   case eventsName[0]:
       //     const result = await eventsServices.insertPICT(newData)
