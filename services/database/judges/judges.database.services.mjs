@@ -31,6 +31,7 @@ function judgesServices(db) {
 
   async function insertJudge(data) {
     try {
+      // console.log(data)
       await db.execute(
         { sql: judgesQueries.insertJudge, namedPlaceholders: true },
         data
