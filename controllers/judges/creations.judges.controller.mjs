@@ -16,7 +16,7 @@ function creationsJudgesController(judgesServices, emailService) {
 
 
       await judgesServices.insertJudge({
-        events: [events],
+        events: events,
         ...rest, // Spread the rest of the properties
         jid,
         password,
@@ -30,7 +30,7 @@ function creationsJudgesController(judgesServices, emailService) {
         ...rest, // Spread the rest of the properties
         jid,
         password,
-        group_link: groupLinks.get(events),
+        group_link: groupLinks.get(events[0]),
       });
       res.status(201).end();
     } catch (err) {
