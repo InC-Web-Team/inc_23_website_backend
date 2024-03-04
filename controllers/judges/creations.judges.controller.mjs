@@ -9,19 +9,28 @@ function creationsJudgesController(judgesServices, emailService) {
       const jid = event_code + randomID(7);
       const password = randomID(8);
 
+      const eventNames = {
+        'concepts': 'Concepts',
+        'impetus': 'Impetus'
+      };
+
+
       await judgesServices.insertJudge({
-        events: events,
+        events: [events],
         ...rest, // Spread the rest of the properties
         jid,
         password,
         roles: [roles[6]],
       });
+
+      // change the events in camel case 
+
       await emailService.judgeRegistrationEmail({
-        events: events,
+        events: eventNames[events],
         ...rest, // Spread the rest of the properties
         jid,
         password,
-        group_link: groupLinks.get(events[0]),
+        group_link: groupLinks.get(events),
       });
       res.status(201).end();
     } catch (err) {
