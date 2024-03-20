@@ -105,6 +105,7 @@ const teamSize = new Map([
 ])
 
 const slotsData = {
+    // Slots
     '1': 'Friday 5th April (10:00 AM - 1:00 PM)' ,
     '2': 'Friday 5th April (2:00 PM - 5:00 PM)' ,
     '3': 'Friday 5th April (5:00 PM - 7:00 PM)' ,
