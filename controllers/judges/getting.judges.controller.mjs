@@ -80,9 +80,31 @@ function gettingJudgesController(judgesServices, eventsService) {
         try {
             const { jid } = req.params
             const result = await judgesServices.getAllocatedProjectsofJudge(jid)
-            res.status(200).json(result)
+
+            const projectsNotEvaluated = [];
+            const projectsEvaluated = [];
+            // console.log(result[0]['allocated_projects'].split(','))
+
+            const allocatedProjectIds = result[0]['allocated_projects'].split(',').map(pid => pid.trim());
+
+            // console.log("allocatedprojects", allocatedProjectIds)
+
+            for (const pid of allocatedProjectIds) {
+                const noteval = await judgesServices.getProjectsNotEvaluatedByJudge(jid, [pid]);
+                if (noteval !== null) {
+                    projectsNotEvaluated.push(noteval);
+                } else {
+                    projectsEvaluated.push(pid)
+                }
+            }
+
+            // console.log("projectsNotEvaluated", projectsNotEvaluated);
+            // console.log("projectsEvaluated", projectsEvaluated);
+            const mergedProjects = { projectsNotEvaluated, projectsEvaluated };
+            res.status(200).json(mergedProjects);
         } catch (err) { next(err) }
     }
+
 
     return {
         getJudgeFromToken,
