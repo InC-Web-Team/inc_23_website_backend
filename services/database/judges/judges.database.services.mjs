@@ -11,6 +11,7 @@ function judgesServices(db) {
         .catch((err) => {
           throw new AppError(400, "fail", err.sqlMessage);
         });
+        // console.log(results);
       return results[0];
     } catch (err) {
       throw err;
@@ -70,6 +71,7 @@ function judgesServices(db) {
 
   async function getAllocatedProjects(jid) {
     try {
+      // console.log(jid)
       const [conceptsResults] = await db
         .execute(judgesQueries.getAllocatedProjects(jid, eventsName[0]))
         .catch((err) => {
@@ -101,12 +103,8 @@ function judgesServices(db) {
     try {
       switch (event_name) {
         case eventsName[1]:
-          await db.execute({ sql: judgesQueries.existingEvaluation, namedPlaceholders: true }, data).catch(err => {
-
-            throw new AppError(400, 'fail', err.sqlMessage)
-          })
           await db.execute({ sql: judgesQueries.insertImpetusEvaluation, namedPlaceholders: true }, data).catch(err => {
-            // console.log(err);
+
             throw new AppError(400, 'fail', err.sqlMessage)
           })
           break
@@ -126,9 +124,9 @@ function judgesServices(db) {
     }
   }
 
-  async function existingAllocation(pid, jid) {
+  async function existingAllocation(pid, jid, event_name) {
     try {
-      const [results] = await db.execute(judgesQueries.existingEvaluation(pid, jid)).catch(err => {
+      const [results] = await db.execute(judgesQueries.existingEvaluation(pid, jid, event_name)).catch(err => {
         throw new AppError(400, 'fail', err.sqlMessage)
       })
       return results[0]
