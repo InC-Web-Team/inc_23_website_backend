@@ -8,13 +8,14 @@ function createJudgesRouter(judgesServices, eventsServices, emailService, middle
     const { insertJudgeValidation, getJudgeValidation, loginJudgeValidation } = judgesValidations
     const { verifyJudgeValidation } = adminValidations
     const { eventNameParamValidation } = eventsValidations
-    const { getJudgeFromToken, getJudgeFromJid, loginJudge, getProjects, getJudges, getAllocatedProjects, modifySlots } = gettingJudgesController(judgesServices, eventsServices)
+    const { getJudgeFromToken, getJudgeFromJid, loginJudge, getProjects, getJudges, getAllocatedProjects, modifySlots, getAllAllocations } = gettingJudgesController(judgesServices, eventsServices)
     const { insertJudge, evaluateProject } = creationsJudgesController(judgesServices, emailService)
     judgesRouter.use(apiLimiter)
     judgesRouter.get('/:event_name/allocations', eventNameParamValidation(), validator, getProjects)
     judgesRouter.get('/registration/view/:event_name', eventNameParamValidation(), validator, getJudges)
     judgesRouter.get('/verify', getJudgeValidation(), verifyJudgeValidation(7), verifyJudgeLogin, getJudgeFromToken)
-    judgesRouter.get('/allocations/:jid', getAllocatedProjects)
+    judgesRouter.get('/allocations', getAllocatedProjects)
+    judgesRouter.get('/allo', getAllAllocations)
     judgesRouter.get('/:jid', getJudgeValidation(), getJudgeFromJid)
     judgesRouter.patch('/modify_slots/:jid', modifySlots)
     judgesRouter.post('/:event_name/evaluate', evaluateProject)
