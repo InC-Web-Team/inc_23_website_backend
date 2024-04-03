@@ -49,8 +49,8 @@ function gettingJudgesController(judgesServices, eventsService) {
 
     async function getAllocatedProjects(req, res, next) {
         try {
-            // const { jid } = req.params
-            const getAllocatedProjects = await judgesServices.getAllocatedProjects()
+            const { jid } = req.params
+            const getAllocatedProjects = await judgesServices.getAllocatedProjects(jid)
             if (!getAllocatedProjects) throw new AppError(404, 'fail', 'No Projects Found')
             res.status(200).json(getAllocatedProjects)
 
@@ -63,7 +63,7 @@ function gettingJudgesController(judgesServices, eventsService) {
         try {
             const { jid } = req.params
             // console.log(jid)
-            const judge = await judgesServices.getJudge(jid)
+            const judge = await judgesServices.getJudge(jid )
             res.status(302).json(judge)
         } catch (err) { next(err) }
     }
@@ -106,17 +106,6 @@ function gettingJudgesController(judgesServices, eventsService) {
         } catch (err) { next(err) }
     }
 
-    async function getAllAllocations(req, res, next) {
-        try {
-            const allocations = await judgesServices.getAllocations(); // Call the service function
-            res.status(200).json(allocations);
-        } catch (error) {
-            console.error('Error fetching allocations:', error);
-            res.status(500).json({ message: 'Internal server error' });
-        }
-    }
-
-
 
     return {
         getJudgeFromToken,
@@ -126,8 +115,7 @@ function gettingJudgesController(judgesServices, eventsService) {
         getAllocatedProjects,
         getJudgeFromJid,
         modifySlots,
-        getAllocatedProjectsofJudge,
-        getAllAllocations
+        getAllocatedProjectsofJudge
     }
 }
 

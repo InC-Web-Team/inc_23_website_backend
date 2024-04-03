@@ -103,16 +103,6 @@ function judgesServices(db) {
     }
   }
 
-  async function getAllocations() {
-    try {
-      const [results] = await db.execute('SELECT * FROM judge_allocations');
-      return results;
-    } catch (err) {
-      throw err;
-    }
-  }
-
-
   async function modifySlots(jid, slots, mode) {
     try {
       const [results] = await db.execute(judgesQueries.modifySlots(slots, jid, mode)).catch(err => {
@@ -160,10 +150,11 @@ function judgesServices(db) {
     }
   }
 
-  async function getAllocatedProjectsofJudge() {
+  async function getAllocatedProjectsofJudge(jid) {
     try {
       const [results] = await db.execute({
-        sql: `SELECT * FROM judge_allocations`// Include jid in the values array
+        sql: `SELECT * FROM judge_allocations WHERE jid = ?`, // Complete the SQL query
+        values: [jid] // Include jid in the values array
       });
 
       // console.log(results);
@@ -210,8 +201,7 @@ function judgesServices(db) {
     evaluateProject,
     existingAllocation,
     getAllocatedProjectsofJudge,
-    getProjectsNotEvaluatedByJudge,
-    getAllocations
+    getProjectsNotEvaluatedByJudge
   }
 }
 

@@ -18,8 +18,6 @@ function judgesQueries(tableName) {
 
   const getAllocatedProjects = (jid, event_name) => `SELECT ${event_name}_projects.pid, title , abstract , allocations.slots, domain, allocations.event_name, ${event_name}_projects.lab FROM ${event_name}_projects JOIN allocations ON ${event_name}_projects.pid = allocations.pid WHERE allocations.jid='${jid}' AND allocations.event_name = '${event_name}' AND ${event_name}_projects.pid NOT IN (SELECT ${event_name}_evaluation.pid FROM ${event_name}_evaluation WHERE ${event_name}_evaluation.pid = ${event_name}_projects.pid AND ${event_name}_evaluation.jid = '${jid}');`
 
-  const getAllocationsQ = () => `SELECT * from admin;`;
-
   const modifySlots = (slots, jid, mode) => {
     slots = slots.map(slot => `"${slot}"`)
     return `UPDATE judges SET slots = '[${slots}]', mode = '${mode}' WHERE jid = '${jid}';`;
@@ -43,8 +41,7 @@ function judgesQueries(tableName) {
     insertConceptsEvaluation,
     insertImpetusEvaluation,
     existingAllocation,
-    existingEvaluation,
-    getAllocationsQ
+    existingEvaluation
   }
 }
 
