@@ -200,6 +200,7 @@ function getRegistrationsController(
   function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+  
   async function getSynopsis(req, res, next) {
     try {
       let event_name = req.params.event_name;
@@ -219,7 +220,7 @@ function getRegistrationsController(
     }
   }
 
-  
+
   async function backupRegs(req, res, next) {
     try {
       // let event_name = req.params.event_name;
