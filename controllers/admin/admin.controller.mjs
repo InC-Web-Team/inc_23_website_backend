@@ -19,12 +19,9 @@ function adminController(adminServices, docServices, judgeServices) {
       }
       const token = createToken({ username });
       if (user.roles.includes("JUDGE")) {
-        // console.log(username)
         const judge = await adminServices.loginJudge({username, password})
-        // console.log(judge)
         if (!judge) throw new AppError(404, "fail", "Judge account not found")
         const { jid } = judge[0]
-      // console.log(jid)
         sendCookie(res, { judge_data: { token, roles: user.roles } })
           .status(200)
           .json({ roles: user.roles, jid })
@@ -40,7 +37,7 @@ function adminController(adminServices, docServices, judgeServices) {
     try {
       res = await clearCookie(res, "admin_data");
       res = await clearCookie(res, "judge_data");
-      // console.log("logout")
+      // // console.log("logout")
       res.status(200).json({ message: "Logged out successfully" });
     } catch (err) {
       next(err);

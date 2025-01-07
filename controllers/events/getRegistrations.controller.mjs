@@ -51,7 +51,7 @@ function getRegistrationsController(
         req.params.event_name
       );
       if (!results) throw new AppError(404, "fail", "No registrations found");
-      // console.log(results);
+      // // console.log(results);
       res.status(302).json(results);
     } catch (err) {
       next(err);
@@ -60,15 +60,17 @@ function getRegistrationsController(
 
   async function getTicketDetails(req, res, next) {
     try {
-      const { ticket } = req.signedCookies;
+      const { ticket } = req.query;
+      // console.log(ticket)
       const results = await eventsServices.getTicketDetails(ticket);
       if (!results)
         throw new AppError(404, "fail", "Invalid ticket exists in cookie");
       delete results["pid"];
       delete results["payment_id"];
       delete results["date"];
-      res.status(302).json(results);
+      res.status(200).json(results);
     } catch (err) {
+      // console.log('herehere')
       next(err);
     }
   }
@@ -139,9 +141,9 @@ function getRegistrationsController(
       const results = await eventsServices.getPendingPayments(
         req.params.event_name
       );
-      // console.log(results);
+      // // console.log(results);
       // const step_2_data = data.step_2;
-      // console.log(results[0].step_2);
+      // // console.log(results[0].step_2);
       if (!results) throw new AppError(404, "fail", "No pending payments");
       const filteredResults = results.map((item) => ({
         email: item.step_2,
@@ -152,7 +154,7 @@ function getRegistrationsController(
         step_2: item.step_2,
         step_3: item.step_3
       }));
-      // console.log(filteredResults[0].step_2)
+      // // console.log(filteredResults[0].step_2)
       res.status(302).json(filteredResults);
     } catch (err) {
       next(err);
@@ -163,7 +165,7 @@ function getRegistrationsController(
     try {
       const { pid } = req.body
       const temp = pid.substring(0, 2);
-      // console.log(pid)
+      // // console.log(pid)
       let event_name;
       if (temp === "IM") event_name = "impetus"
       else if (temp === "CO") event_name = "concepts"

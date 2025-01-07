@@ -83,11 +83,11 @@ function allocationServices(db) {
             if (event_name === 'impetus') pid = "IM-%";
             else pid = "CO-%";
 
-            // console.log(pid)
+            // // console.log(pid)
             const [results] = await db.execute(allocationQueries.getEvalStats(event_name, pid)).catch(err => {
                 throw new AppError(400, 'fail', err.sqlMessage);
             });
-            // console.log(results)
+            // // console.log(results)
 
             return results;
         } catch (err) {
