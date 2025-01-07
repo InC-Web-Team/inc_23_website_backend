@@ -12,13 +12,13 @@ function createAllocationController(allocationServices, emailServices, eventsSer
   async function allocate(req, res, next) {
     try {
       const { event_name } = req.params
-      // console.log("controller", event_name)
+      // // console.log("controller", event_name)
       const { jids } = req.body
-      // console.log(event_name, req.body)
+      // // console.log(event_name, req.body)
       await allocationServices.allocate(event_name, req.body)
       const judge = await judgeServices.getJudge(jids[0])
       const judgeCredentials = await judgeServices.getCredentials(judge.email)
-      // console.log(judgeCredentials)
+      // // console.log(judgeCredentials)
       const projects = await eventsServices.getProject(event_name, req.body.pids)
       await emailServices.sendAllocationEmail(event_name, projects, judge, judgeCredentials)
       res.status(200).end()

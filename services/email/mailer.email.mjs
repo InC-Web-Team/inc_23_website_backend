@@ -57,7 +57,7 @@ function emailService() {
 
     async function judgeRegistrationEmail(judge) {
         try {
-            // console.log(judge)
+            // // console.log(judge)
             judge.domains = judge.domains.map(domain => projectDomains[domain])
             judge.slots = judge.slots.map(slot => slotsData[slot])
             const mailOptions = {

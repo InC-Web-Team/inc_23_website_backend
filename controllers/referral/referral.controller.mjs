@@ -3,7 +3,7 @@ import { AppError } from '../../utils/index.js';
 function referralController(referralServices) {
   async function referralConcepts(req, res) {
     try {
-      // console.log(req.body);
+      // // console.log(req.body);
 
       await referralServices.insertReferral(req.body);
       res.status(201).json({ msg: "Received referral" });

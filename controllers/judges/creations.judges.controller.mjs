@@ -41,12 +41,12 @@ function creationsJudgesController(judgesServices, emailService) {
   async function evaluateProject(req, res, next) {
     try {
       const { event_name } = req.params;
-      console.log(event_name)
+      // console.log(event_name)
       const { pid, jid } = req.body;
       const isExist = await judgesServices.existingAllocation(pid, jid, event_name);
-      // console.log(isExist)
+      // // console.log(isExist)
       if (isExist['COUNT(*)'] >= 1) {
-        // console.log("Existing allocation")
+        // // console.log("Existing allocation")
         res.status(401).end();
       }
       await judgesServices.evaluateProject(event_name, req.body);

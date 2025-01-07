@@ -37,7 +37,7 @@ function adminController(adminServices, docServices, judgeServices) {
     try {
       res = await clearCookie(res, "admin_data");
       res = await clearCookie(res, "judge_data");
-      // console.log("logout")
+      // // console.log("logout")
       res.status(200).json({ message: "Logged out successfully" });
     } catch (err) {
       next(err);
