@@ -77,7 +77,9 @@ function eventsQueries(tableName) {
         FROM inc_2024.tickets t where t.pid = "IM-ML0056"`
     }
 
-
+    const getTechfiestaMembers = () => {
+        return `CALL getTechfiestaMembers(?)`;
+    }
 
 
     return {
@@ -91,7 +93,9 @@ function eventsQueries(tableName) {
         updateProjectAbstractQ,
         getProject,
         updateProject,
-        getBackups
+        getBackups,
+        getTechfiestaMembers,
+
     }
 }
 

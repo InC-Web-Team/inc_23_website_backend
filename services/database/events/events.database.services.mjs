@@ -57,6 +57,21 @@ function eventsServices(db) {
     }
   }
 
+  async function getTechfiestaMembersFromId(team_id){
+    try{
+      const [[data]] = await db
+      .execute(eventsQueries.getTechfiestaMembers(), [team_id])
+      .catch((err) => {
+        throw new AppError(400, "fail", err.sqlMessage);
+      });
+      // console.log(data[0]);
+      return data[0];
+    }
+    catch(err){
+      throw err;
+    }
+  }
+
   async function deleteMemberDetails(ticket, index) {
     try {
       // // console.log(ticket);
@@ -139,6 +154,25 @@ function eventsServices(db) {
       return results[0];
     } catch (err) {
       // // console.log(err);
+      throw err;
+    }
+  }
+
+  async function saveRegistrationDetails(data, updated_step){
+    try{
+      const [results] = await db
+        .execute(ticketQueries.saveRegistrationDetails, [
+          updated_step,
+          data.payment_id,
+          data.ticket,
+          data.team_id,
+        ])
+        .catch((err) => {
+          throw new AppError(400, "fail", err.sqlMessage);
+        });
+      return results[0];
+    }
+    catch(err){
       throw err;
     }
   }
@@ -1083,7 +1117,10 @@ function eventsServices(db) {
     insertImpetusPICT,
     deleteMemberDetails,
     getBackup,
-    insertBackup
+    insertBackup,
+    getTechfiestaMembersFromId,
+    saveRegistrationDetails,
+    
   };
 }
 

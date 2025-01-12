@@ -252,7 +252,7 @@ function getRegistrationsController(
     getProjectAbstract,
     updateProjectAbstract,
     getSynopsis,
-    backupRegs
+    backupRegs,
   };
 }
 

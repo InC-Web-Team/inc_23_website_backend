@@ -113,6 +113,46 @@ function createRegistrationsController(
 
     } catch (error) {
       // // console.log(error)
+      next(error)
+    }
+  }
+
+  async function getTechfiestaMembers(req, res, next){
+    try{
+      const { team_id } = req.query;
+      const members = await eventsServices.getTechfiestaMembersFromId(team_id?.toUpperCase());
+      console.log(members);
+      if(!members){
+        throw new AppError(
+          404,
+          'fail',
+          `Invalid Techfiesta Team ID.`
+        )
+      }
+      if(members.is_used === 1){
+        console.log('here')
+        throw new AppError(
+          404,
+          'fail',
+          `Team ${team_id} already registered. Change Team ID to continue.`
+        )
+      }
+      else res.status(200).json(members);
+    }
+    catch(error){
+      next(error)
+    }
+  }
+
+  async function addTechfiestaMembers(req, res, next){
+    try {
+      const { ticket } = req.query;
+      await eventsServices.editStepData(ticket, 2, [
+        ...req.body
+      ]);
+      res.json('hello');
+    } catch (error) {
+      next(error)
     }
   }
 
@@ -148,7 +188,6 @@ function createRegistrationsController(
       const { ticket } = req.query;
       // console.log(ticket);
       let results = await eventsServices.getTicketDetails(ticket);
-      // console.log(results)
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.payment_id !== "")
         throw new AppError(
@@ -157,13 +196,18 @@ function createRegistrationsController(
           "Registration done using this ticket and payment under verification"
         );
       else if (results.step_no === 3) {
-        const { isPICT, isInternational, techfiesta } = results.step_3;
-        if (isPICT === "1") {
+        const { isPICT, isInternational } = results.step_3;
+        const { techfiesta, team_id } = results.step_1;
+        if(techfiesta === "1"){
+          req.body = { ...req.body, payment_id: "TECHFIESTA" };
+        } else if (isPICT === "1") {
           req.body = { ...req.body, payment_id: "PICT" };
         } else if (isInternational === "1") {
           req.body = { ...req.body, payment_id: "INTERNATIONAL" };
         }
-        await eventsServices.editPaymentAndStep({ ...req.body, ticket }, 4);
+        // console.log(techfiesta, team_id);
+        req.body = { ...req.body, team_id: team_id || '' };
+        await eventsServices.saveRegistrationDetails({ ...req.body, ticket }, 4);
         res.status(201).json({success: true, ticket}).end()
       } else if (results.step_no === 5 && results.payment_id !== "")
         throw new AppError(
@@ -269,7 +313,10 @@ function createRegistrationsController(
     verifyPendingPayment,
     updateProject,
     insertInternalPICT,
-    deleteMember
+    deleteMember,
+    getTechfiestaMembers,
+    addTechfiestaMembers,
+
   };
 }
 
