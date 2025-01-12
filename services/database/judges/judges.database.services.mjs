@@ -11,7 +11,7 @@ function judgesServices(db) {
         .catch((err) => {
           throw new AppError(400, "fail", err.sqlMessage);
         });
-      // // console.log(results);
+      // // // console.log(results);
       return results[0];
     } catch (err) {
       throw err;
@@ -33,7 +33,7 @@ function judgesServices(db) {
 
   async function insertJudge(data) {
     try {
-      // // console.log(data)
+      // // // console.log(data)
       await db.execute(
         { sql: judgesQueries.insertJudge, namedPlaceholders: true },
         data
@@ -54,7 +54,7 @@ function judgesServices(db) {
 
   async function loginJudge(data) {
     try {
-      // // console.log(data)
+      // // // console.log(data)
       const [results] = await db
         .execute(
           { sql: judgesQueries.loginJudge, namedPlaceholders: true },
@@ -71,7 +71,7 @@ function judgesServices(db) {
 
   async function getCredentials(email) {
     try {
-      // // console.log("getcreds : ", email)
+      // // // console.log("getcreds : ", email)
       const [results] = await db
         .execute(judgesQueries.getJudgeCreds(email))
         .catch((err) => {
@@ -86,7 +86,7 @@ function judgesServices(db) {
 
   async function getAllocatedProjects(jid) {
     try {
-      // // console.log(jid)
+      // // // console.log(jid)
       const [conceptsResults] = await db
         .execute(judgesQueries.getAllocatedProjects(jid, eventsName[0]))
         .catch((err) => {
@@ -157,7 +157,7 @@ function judgesServices(db) {
         values: [jid] // Include jid in the values array
       });
 
-      // // console.log(results);
+      // // // console.log(results);
 
       return results;
     } catch (err) {
@@ -167,7 +167,7 @@ function judgesServices(db) {
 
   async function getProjectsNotEvaluatedByJudge(jid, pid) {
     try {
-      // // console.log("Querying with pid:", pid, "jid:", jid);
+      // // // console.log("Querying with pid:", pid, "jid:", jid);
       const [results] = await db.execute({
         sql: `
                 SELECT COUNT(pid)
@@ -177,7 +177,7 @@ function judgesServices(db) {
         values: [pid[0], jid]
       });
 
-      // // console.log(pid, jid, ':', results)
+      // // // console.log(pid, jid, ':', results)
       if (results.length === 0 || results[0]['COUNT(pid)'] === 0) {
         return pid;
       }

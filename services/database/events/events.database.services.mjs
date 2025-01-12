@@ -38,8 +38,8 @@ function eventsServices(db) {
         });
       return results[0];
     } catch (err) {
-      // // console.log(err);
-      // // console.log(err);
+      // // // console.log(err);
+      // // // console.log(err);
       throw err;
     }
   }
@@ -57,9 +57,24 @@ function eventsServices(db) {
     }
   }
 
+  async function getTechfiestaMembersFromId(team_id){
+    try{
+      const [[data]] = await db
+      .execute(eventsQueries.getTechfiestaMembers(), [team_id])
+      .catch((err) => {
+        throw new AppError(400, "fail", err.sqlMessage);
+      });
+      // // console.log(data[0]);
+      return data[0];
+    }
+    catch(err){
+      throw err;
+    }
+  }
+
   async function deleteMemberDetails(ticket, index) {
     try {
-      // // console.log(ticket);
+      // // // console.log(ticket);
       const [results] = await db
         .execute(`UPDATE tickets
           SET step_2 = JSON_REMOVE(step_2, ?)
@@ -126,7 +141,7 @@ function eventsServices(db) {
 
   async function editPaymentAndStep(data, updated_step) {
     try {
-      // // console.log(data)
+      // // // console.log(data)
       const [results] = await db
         .execute(ticketQueries.editPaymentAndStep, [
           updated_step,
@@ -138,7 +153,26 @@ function eventsServices(db) {
         });
       return results[0];
     } catch (err) {
-      // // console.log(err);
+      // // // console.log(err);
+      throw err;
+    }
+  }
+
+  async function saveRegistrationDetails(data, updated_step){
+    try{
+      const [results] = await db
+        .execute(ticketQueries.saveRegistrationDetails, [
+          updated_step,
+          data.payment_id,
+          data.ticket,
+          data.team_id,
+        ])
+        .catch((err) => {
+          throw new AppError(400, "fail", err.sqlMessage);
+        });
+      return results[0];
+    }
+    catch(err){
       throw err;
     }
   }
@@ -185,7 +219,7 @@ function eventsServices(db) {
       const techfiesta = '';
       const department = '';
 
-      // console.log('here after data')
+      // // console.log('here after data')
       let dataArray = [];
       switch (event_name) {
         case eventsName[0]:
@@ -629,11 +663,11 @@ function eventsServices(db) {
           }
           break;
       }
-      // // console.log(data);
-      // // console.log(eventsQueries.completeRegistration(event_name, step_2.length));
-      // // console.log("dataArray = ", dataArray.length);
+      // // // console.log(data);
+      // // // console.log(eventsQueries.completeRegistration(event_name, step_2.length));
+      // // // console.log("dataArray = ", dataArray.length);
 
-      // console.log(dataArray);
+      // // console.log(dataArray);
       
       const [[results]] = await db
         .execute(
@@ -730,14 +764,14 @@ function eventsServices(db) {
           data
         )
         .catch((err) => {
-          // // console.log(err);
+          // // // console.log(err);
 
           throw new AppError(400, "fail", err.sqlMessage);
         });
 
       return results[0];
     } catch (err) {
-      // // console.log(err);
+      // // // console.log(err);
       throw err;
     }
   }
@@ -1083,7 +1117,10 @@ function eventsServices(db) {
     insertImpetusPICT,
     deleteMemberDetails,
     getBackup,
-    insertBackup
+    insertBackup,
+    getTechfiestaMembersFromId,
+    saveRegistrationDetails,
+    
   };
 }
 

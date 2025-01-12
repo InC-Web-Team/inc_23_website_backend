@@ -20,7 +20,7 @@ async function eventRegistrationEmail(data) {
 
 async function judgeRegistrationEmail(judge) {
     try {
-        // // console.log(judge)
+        // // // console.log(judge)
         return ejs.render(judgeTemplate, { judge, filename: __dirname + '/views/emails/judgeRegistration.email.ejs', cache: true, async: true })
     } catch (err) {
         throw err
@@ -29,8 +29,8 @@ async function judgeRegistrationEmail(judge) {
 
 async function sendAllocationEmail(event_name, projects, judge, judgeCredentials) {
     try {
-        // // console.log("judgeCred : ", judgeCredentials)
-        // // console.log(event_name)
+        // // // console.log("judgeCred : ", judgeCredentials)
+        // // // console.log(event_name)
 
         if (event_name === 'Concepts') {
             return ejs.render(offlineConceptsJudgeAllocationTemplate, { data: { projects, judge, judgeCredentials }, filename: __dirname + `/views/emails/offline.concepts.judgeAllocation.email.ejs`, cache: true, async: true })

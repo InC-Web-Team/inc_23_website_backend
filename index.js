@@ -5,13 +5,13 @@ server.listen(process.env.PORT || '3001', '0.0.0.0', () => {
 })
 
 process.on('uncaughtException', err => {
-  // console.log('UNCAUGHT EXCEPTION!!! shutting down...')
-  // console.log(err.name, err)
+  // // console.log('UNCAUGHT EXCEPTION!!! shutting down...')
+  // // console.log(err.name, err)
   process.exit(1)
 })
 
 process.on('unhandledRejection', err => {
-  // console.log('UNHANDLED REJECTION!!!  shutting down ...')
-  // console.log(err.name, err)
+  // // console.log('UNHANDLED REJECTION!!!  shutting down ...')
+  // // console.log(err.name, err)
   process.exit(1)
 })

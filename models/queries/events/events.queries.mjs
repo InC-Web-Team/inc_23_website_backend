@@ -13,16 +13,16 @@ function eventsQueries(tableName) {
     }
 
     const completeRegistration = (event_name, no_of_members) => {
-        // // console.log(event_name)
+        // // // console.log(event_name)
         let placeholders = ''
         if (event_name === 'pradnya') {
             for (let i = 0; i < no_of_members; i++) placeholders += ', ?, ?, ?, ?, ?'
         } else {
-            // // console.log("Hello")
+            // // // console.log("Hello")
             for (let i = 0; i < no_of_members; i++) placeholders += ', ?, ?, ?, ?'
         }
-        // // console.log(placeholders);
-        // console.log(process.env[`INSERT_${event_name.toUpperCase()}_${no_of_members}`] + placeholders + ');')
+        // // // console.log(placeholders);
+        // // console.log(process.env[`INSERT_${event_name.toUpperCase()}_${no_of_members}`] + placeholders + ');')
         return process.env[`INSERT_${event_name.toUpperCase()}_${no_of_members}`] + placeholders + ');'
     }
 
@@ -77,7 +77,9 @@ function eventsQueries(tableName) {
         FROM inc_2024.tickets t where t.pid = "IM-ML0056"`
     }
 
-
+    const getTechfiestaMembers = () => {
+        return `CALL getTechfiestaMembers(?)`;
+    }
 
 
     return {
@@ -91,7 +93,9 @@ function eventsQueries(tableName) {
         updateProjectAbstractQ,
         getProject,
         updateProject,
-        getBackups
+        getBackups,
+        getTechfiestaMembers,
+
     }
 }
 
