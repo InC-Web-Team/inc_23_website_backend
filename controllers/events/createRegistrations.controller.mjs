@@ -10,13 +10,13 @@ function createRegistrationsController(
   async function saveProject(req, res, next) {
     try {
       const { event_name, ticket } = req.query;
-      // // console.log('req body ', req.body)
+      // // // console.log('req body ', req.body)
       if (ticket) {
-        // // console.log('here1')
+        // // // console.log('here1')
         await eventsServices.editStepData(ticket, 1, req.body);
         res.status(200).json({success: true, ticket}).end()
       } else {
-        // // console.log('here2')
+        // // // console.log('here2')
         const ticket = "INC-" + event_name[0].toUpperCase() + randomID(12);
         await eventsServices.insertTicket({
           ticket,
@@ -37,14 +37,14 @@ function createRegistrationsController(
       const { event_name, ticket } = req.query;
 
       const { email } = req.body;
-      // console.log(email, event_name, ticket)
+      // // console.log(email, event_name, ticket)
 
       const user_email = await eventsServices.getUserRegistration(
         event_name,
         email
       );
 
-      // console.log('mail ', user_email)
+      // // console.log('mail ', user_email)
 
       if (user_email)
         throw new AppError(
@@ -54,7 +54,7 @@ function createRegistrationsController(
         );
       const member_id_file = req.file;
       if (event_name === eventsName[2] && !ticket) {
-        // console.log('in here')
+        // // console.log('in here')
         const ticket = "INC-" + event_name[0].toUpperCase() + randomID(12);
         await eventsServices.insertTicket({
           ticket,
@@ -62,7 +62,7 @@ function createRegistrationsController(
           step_2: [{ ...req.body }],
           step_no: 2,
         });
-        // console.log(ticket)
+        // // console.log(ticket)
         await filesServices.insertFile(email, member_id_file);
         sendCookie(res, { ticket }, `/register/${event_name}`)
           .status(201).json({success: true, ticket}).end();
@@ -71,7 +71,7 @@ function createRegistrationsController(
       const existing_members = await eventsServices.getMembersFromTicket(
         ticket
       );
-      // console.log('existing mems ', existing_members)
+      // // console.log('existing mems ', existing_members)
       if (!existing_members)
         throw new AppError(404, "fail", "Ticket does not exist");
       if (Array.isArray(existing_members.step_2)) {
@@ -108,11 +108,11 @@ function createRegistrationsController(
       let { ticket } = req.query;
 
       const memberDetails = await eventsServices.getMembersFromTicket(ticket);
-      // // console.log('getmems ', memberDetails);
+      // // // console.log('getmems ', memberDetails);
       res.status(200).json(memberDetails)
 
     } catch (error) {
-      // // console.log(error)
+      // // // console.log(error)
       next(error)
     }
   }
@@ -121,7 +121,7 @@ function createRegistrationsController(
     try{
       const { team_id } = req.query;
       const members = await eventsServices.getTechfiestaMembersFromId(team_id?.toUpperCase());
-      console.log(members);
+      // console.log(members);
       if(!members){
         throw new AppError(
           404,
@@ -130,7 +130,7 @@ function createRegistrationsController(
         )
       }
       if(members.is_used === 1){
-        console.log('here')
+        // console.log('here')
         throw new AppError(
           404,
           'fail',
@@ -160,7 +160,7 @@ function createRegistrationsController(
     try {
       let { ticket, index } = req.query;
       // let { index } = req.body; // Assuming memberID is the key for the member details to delete
-      // console.log(req.query)
+      // // console.log(req.query)
       await eventsServices.deleteMemberDetails(ticket, Number(index));
       res.status(200).json({ message: 'Member details deleted successfully', success: true, ticket });
     } catch (error) {
@@ -186,7 +186,7 @@ function createRegistrationsController(
   async function requestRegistration(req, res, next) {
     try {
       const { ticket } = req.query;
-      // console.log(ticket);
+      // // console.log(ticket);
       let results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.payment_id !== "")
@@ -205,7 +205,7 @@ function createRegistrationsController(
         } else if (isInternational === "1") {
           req.body = { ...req.body, payment_id: "INTERNATIONAL" };
         }
-        // console.log(techfiesta, team_id);
+        // // console.log(techfiesta, team_id);
         req.body = { ...req.body, team_id: team_id || '' };
         await eventsServices.saveRegistrationDetails({ ...req.body, ticket }, 4);
         res.status(201).json({success: true, ticket}).end()
@@ -226,7 +226,7 @@ function createRegistrationsController(
       const { ticket } = req.body;
       const { event_name } = req.params;
 
-      // console.log(ticket, ' ', event_name)
+      // // console.log(ticket, ' ', event_name)
       const results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.step_no === 4) {
@@ -235,7 +235,7 @@ function createRegistrationsController(
           event_name,
           results
         );
-        // console.log('pid ', pid)
+        // // console.log('pid ', pid)
         // await emailService.eventRegistrationEmail(event_name, {
         //   ...results,
         //   pid,
@@ -287,7 +287,7 @@ function createRegistrationsController(
         email: req.body.email,
         department: req.body.department
       };
-      // // console.log(newData);
+      // // // console.log(newData);
       // switch (event_name) {
       //   case eventsName[0]:
       //     const result = await eventsServices.insertPICT(newData)

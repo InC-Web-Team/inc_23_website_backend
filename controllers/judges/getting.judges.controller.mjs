@@ -62,7 +62,7 @@ function gettingJudgesController(judgesServices, eventsService) {
     async function getJudgeFromJid(req, res, next) {
         try {
             const { jid } = req.params
-            // // console.log(jid)
+            // // // console.log(jid)
             const judge = await judgesServices.getJudge(jid )
             res.status(302).json(judge)
         } catch (err) { next(err) }
@@ -84,11 +84,11 @@ function gettingJudgesController(judgesServices, eventsService) {
 
             const projectsNotEvaluated = [];
             const projectsEvaluated = [];
-            // // console.log(result[0]['allocated_projects'].split(','))
+            // // // console.log(result[0]['allocated_projects'].split(','))
 
             const allocatedProjectIds = result[0]['allocated_projects'].split(',').map(pid => pid.trim());
 
-            // // console.log("allocatedprojects", allocatedProjectIds)
+            // // // console.log("allocatedprojects", allocatedProjectIds)
 
             for (const pid of allocatedProjectIds) {
                 const noteval = await judgesServices.getProjectsNotEvaluatedByJudge(jid, [pid]);
@@ -99,8 +99,8 @@ function gettingJudgesController(judgesServices, eventsService) {
                 }
             }
 
-            // // console.log("projectsNotEvaluated", projectsNotEvaluated);
-            // // console.log("projectsEvaluated", projectsEvaluated);
+            // // // console.log("projectsNotEvaluated", projectsNotEvaluated);
+            // // // console.log("projectsEvaluated", projectsEvaluated);
             const mergedProjects = { projectsNotEvaluated, projectsEvaluated };
             res.status(200).json(mergedProjects);
         } catch (err) { next(err) }

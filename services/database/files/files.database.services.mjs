@@ -26,7 +26,7 @@ function filesServices(db) {
         try {
           const [results] = await db.execute(`SELECT * FROM files_verify`)
 
-          // console.log(results)
+          // // console.log(results)
         //   return results.reduce((acc, cur) => {
         //     acc[cur.email] = cur.file;
         //     return acc;
