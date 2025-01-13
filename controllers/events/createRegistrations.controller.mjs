@@ -37,14 +37,14 @@ function createRegistrationsController(
       const { event_name, ticket } = req.query;
 
       const { email } = req.body;
-      // // console.log(email, event_name, ticket)
+      // console.log(email, event_name, ticket)
 
       const user_email = await eventsServices.getUserRegistration(
         event_name,
         email
       );
 
-      // // console.log('mail ', user_email)
+      // console.log('mail ', user_email)
 
       if (user_email)
         throw new AppError(

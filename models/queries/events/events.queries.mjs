@@ -9,6 +9,8 @@ function eventsQueries(tableName) {
                 return `SELECT email FROM ${tableName.impetusUsersTable} WHERE email = ?;`
             case eventsName[2]:
                 return `SELECT email FROM ${tableName.pradnyaUsersTable} WHERE email = ?;`
+            case eventsName[3]:
+                return `SELECT email FROM ${tableName.novaUsersTable} WHERE email = ?;`
         }
     }
 

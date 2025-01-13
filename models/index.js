@@ -20,6 +20,7 @@ const tables = {
     conceptsUsersTable: env.CONCEPTS_USERS_TABLE,
     impetusUsersTable: env.IMPETUS_USERS_TABLE,
     pradnyaUsersTable: env.PRADNYA_USERS_TABLE,
+    novaUsersTable: env.NOVA_USERS_TABLE,
     ticketTable: env.TICKET_TABLE,
     filesTable: env.FILES_TABLE,
     judgesTable: env.JUDGES_TABLE,
