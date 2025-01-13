@@ -119,7 +119,7 @@ function createRegistrationsController(
 
   async function getTechfiestaMembers(req, res, next){
     try{
-      const { team_id } = req.query;
+      const { team_id, event } = req.query;
       const members = await eventsServices.getTechfiestaMembersFromId(team_id?.toUpperCase());
       // console.log(members);
       if(!members){
@@ -129,7 +129,7 @@ function createRegistrationsController(
           `Invalid Techfiesta Team ID.`
         )
       }
-      if(members.is_used === 1){
+      if((members.is_used.includes("nova") && (event === "nova")) || (members.is_used.includes("impetus") && (event === "impetus" || event === "concepts")) || (members.is_used.includes("concepts") && (event === "impetus" || event === "concepts"))){
         // console.log('here')
         throw new AppError(
           404,
@@ -185,7 +185,7 @@ function createRegistrationsController(
 
   async function requestRegistration(req, res, next) {
     try {
-      const { ticket } = req.query;
+      const { event, ticket } = req.query;
       // // console.log(ticket);
       let results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
@@ -207,7 +207,7 @@ function createRegistrationsController(
         }
         // // console.log(techfiesta, team_id);
         req.body = { ...req.body, team_id: team_id || '' };
-        await eventsServices.saveRegistrationDetails({ ...req.body, ticket }, 4);
+        await eventsServices.saveRegistrationDetails({ ...req.body, ticket, event }, 4);
         res.status(201).json({success: true, ticket}).end()
       } else if (results.step_no === 5 && results.payment_id !== "")
         throw new AppError(

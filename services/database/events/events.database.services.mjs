@@ -166,6 +166,7 @@ function eventsServices(db) {
           data.payment_id,
           data.ticket,
           data.team_id,
+          data.event,
         ])
         .catch((err) => {
           throw new AppError(400, "fail", err.sqlMessage);
