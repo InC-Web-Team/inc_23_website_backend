@@ -15,7 +15,7 @@ function ticketQueries(tableName) {
 
     const editPaymentAndStep = `UPDATE ${tableName} SET step_no = ?, payment_id = ? WHERE ticket = ?;`
 
-    const saveRegistrationDetails = `CALL saveRegistrationDetails(?, ?, ?, ?)`;
+    const saveRegistrationDetails = `CALL saveRegistrationDetails(?, ?, ?, ?, ?)`;
 
     // const deleteMemberDetailsFromTicket = `UPDATE tickets
     // SET step_2 = JSON_REMOVE(step_2, ${index})
