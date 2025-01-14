@@ -102,6 +102,7 @@ const teamSize = new Map([
     ['concepts', 5],
     ['impetus', 5],
     ['pradnya', 2],
+    ['nova', 5],
 ])
 
 const slotsData = {

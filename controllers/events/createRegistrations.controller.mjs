@@ -63,6 +63,8 @@ function createRegistrationsController(
           step_no: 2,
         });
         // // console.log(ticket)
+
+        // IMP
         await filesServices.insertFile(email, member_id_file);
         sendCookie(res, { ticket }, `/register/${event_name}`)
           .status(201).json({success: true, ticket}).end();
@@ -71,7 +73,6 @@ function createRegistrationsController(
       const existing_members = await eventsServices.getMembersFromTicket(
         ticket
       );
-      // // console.log('existing mems ', existing_members)
       if (!existing_members)
         throw new AppError(404, "fail", "Ticket does not exist");
       if (Array.isArray(existing_members.step_2)) {
@@ -160,7 +161,7 @@ function createRegistrationsController(
     try {
       let { ticket, index } = req.query;
       // let { index } = req.body; // Assuming memberID is the key for the member details to delete
-      // // console.log(req.query)
+      console.log(req.query)
       await eventsServices.deleteMemberDetails(ticket, Number(index));
       res.status(200).json({ message: 'Member details deleted successfully', success: true, ticket });
     } catch (error) {
