@@ -1,6 +1,6 @@
 import { filesQueries } from '../../../models/index.js';
 import cloudinaryUpload from '../../../utils/cloudinaryUpload.js';
-import { AppError, fileToBase64 } from "../../../utils/index.js";
+import { AppError } from "../../../utils/index.js";
 import { unlink } from 'fs';
 
 function filesServices(db) {
@@ -20,14 +20,17 @@ function filesServices(db) {
             // cloudinary logic
             const url = await cloudinaryUpload(path, email)
             const [results] = await db.execute(filesQueries.insertFile, [email, file_name, size, url]).catch(err => { throw new AppError(400, 'fail', err.sqlMessage) })
-            return results[0]
+            return path
         } catch (err) {
             throw new AppError(500, 'fail', err.message || err)
         }
         finally{
-            unlink("./" + path, (err) => {
-                if (err) throw err;
-            });
+					unlink(path, (err) => {
+						if (err) {
+							console.error(`Error removing file: ${err}`);
+							return;
+						}
+					});
         }
     }
 
