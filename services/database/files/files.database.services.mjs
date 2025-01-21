@@ -1,7 +1,7 @@
 import { filesQueries } from '../../../models/index.js';
 import cloudinaryUpload from '../../../utils/cloudinaryUpload.js';
 import { AppError, fileToBase64 } from "../../../utils/index.js";
-import { unlinkSync } from 'fs';
+import { unlink } from 'fs';
 
 function filesServices(db) {
     async function checkFile(email) {
@@ -17,7 +17,6 @@ function filesServices(db) {
         const { path, size, originalname } = file
         try {
             const file_name = `${email} - ${originalname}`
-            //todo
             // cloudinary logic
             const url = await cloudinaryUpload(path, email)
             const [results] = await db.execute(filesQueries.insertFile, [email, file_name, size, url]).catch(err => { throw new AppError(400, 'fail', err.sqlMessage) })
@@ -26,9 +25,8 @@ function filesServices(db) {
             throw new AppError(500, 'fail', err.message || err)
         }
         finally{
-            unlinkSync("./" + path, (err) => {
+            unlink("./" + path, (err) => {
                 if (err) throw err;
-                // console.log('path/file.txt was deleted');
             });
         }
     }

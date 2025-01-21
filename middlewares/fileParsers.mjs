@@ -16,6 +16,6 @@ const storage = multer.diskStorage({
   },
 });
 
-const memberIDParser = multer({ storage: storage  ,limits: { fileSize: 200000, files: 1 }}).single('member_id');
+const memberIDParser = multer({ storage: storage, limits: { fileSize: 200000, files: 1 }}).single('member_id');
 
 export { memberIDParser }

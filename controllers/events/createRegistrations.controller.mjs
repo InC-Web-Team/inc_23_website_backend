@@ -63,9 +63,8 @@ function createRegistrationsController(
           step_no: 2,
         });
         // // console.log(ticket)
-
         // IMP
-        await filesServices.insertFile(email, member_id_file);
+        if(member_id_file) await filesServices.insertFile(email, member_id_file);
         sendCookie(res, { ticket }, `/register/${event_name}`)
           .status(201).json({success: true, ticket}).end();
         return;
@@ -87,14 +86,14 @@ function createRegistrationsController(
                 "Duplicate email address found in a team"
               );
           });
-          await filesServices.insertFile(email, member_id_file);
+          if(member_id_file) await filesServices.insertFile(email, member_id_file);
           await eventsServices.editStepData(ticket, 2, [
             ...existing_members.step_2,
             req.body,
           ]);
         }
       } else {
-        await filesServices.insertFile(email, member_id_file);
+        if(member_id_file) await filesServices.insertFile(email, member_id_file);
         await eventsServices.editStepData(ticket, 2, [{ ...req.body }]);
       }
       sendCookie(res, { ticket }, `/register/${event_name}`)
@@ -161,7 +160,6 @@ function createRegistrationsController(
     try {
       let { ticket, index } = req.query;
       // let { index } = req.body; // Assuming memberID is the key for the member details to delete
-      console.log(req.query)
       await eventsServices.deleteMemberDetails(ticket, Number(index));
       res.status(200).json({ message: 'Member details deleted successfully', success: true, ticket });
     } catch (error) {
