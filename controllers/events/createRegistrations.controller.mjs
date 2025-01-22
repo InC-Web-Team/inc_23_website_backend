@@ -10,13 +10,11 @@ function createRegistrationsController(
   async function saveProject(req, res, next) {
     try {
       const { event_name, ticket } = req.query;
-      // // // console.log('req body ', req.body)
-      if (ticket) {
-        // // // console.log('here1')
+      const isTicketExists = await eventsServices.getTicketDetails(ticket);
+      if (isTicketExists) {
         await eventsServices.editStepData(ticket, 1, req.body);
         res.status(200).json({success: true, ticket}).end()
       } else {
-        // // // console.log('here2')
         const ticket = "INC-" + event_name[0].toUpperCase() + randomID(12);
         await eventsServices.insertTicket({
           ticket,
@@ -24,8 +22,7 @@ function createRegistrationsController(
           step_2: {},
           step_no: 1,
         });
-        sendCookie(res, { ticket }, `/register/${event_name}`)
-          .status(200).json({success: true, ticket}).end()
+        res.status(201).json({success: true, ticket}).end()
       }
     } catch (err) {
       next(err);
@@ -37,14 +34,11 @@ function createRegistrationsController(
       const { event_name, ticket } = req.query;
 
       const { email } = req.body;
-      // console.log(email, event_name, ticket)
-
+      
       const user_email = await eventsServices.getUserRegistration(
         event_name,
         email
       );
-
-      // console.log('mail ', user_email)
 
       if (user_email)
         throw new AppError(
@@ -53,8 +47,8 @@ function createRegistrationsController(
           `Email ${user_email.email} already registered for ${event_name}`
         );
       const member_id_file = req.file;
-      if (event_name === eventsName[2] && !ticket) {
-        // // console.log('in here')
+      const isTicketExists = await eventsServices.getTicketDetails(ticket);
+      if (event_name === eventsName[2] && !isTicketExists) {
         const ticket = "INC-" + event_name[0].toUpperCase() + randomID(12);
         await eventsServices.insertTicket({
           ticket,
@@ -62,11 +56,9 @@ function createRegistrationsController(
           step_2: [{ ...req.body }],
           step_no: 2,
         });
-        // // console.log(ticket)
         // IMP
         if(member_id_file) await filesServices.insertFile(email, member_id_file);
-        sendCookie(res, { ticket }, `/register/${event_name}`)
-          .status(201).json({success: true, ticket}).end();
+        res.status(201).json({success: true, ticket}).end();
         return;
       }
       const existing_members = await eventsServices.getMembersFromTicket(
@@ -96,8 +88,7 @@ function createRegistrationsController(
         if(member_id_file) await filesServices.insertFile(email, member_id_file);
         await eventsServices.editStepData(ticket, 2, [{ ...req.body }]);
       }
-      sendCookie(res, { ticket }, `/register/${event_name}`)
-        .status(200).json({success: true, ticket}).end()
+      res.status(200).json({success: true, ticket}).end()
     } catch (err) {
       next(err);
     }
@@ -175,8 +166,7 @@ function createRegistrationsController(
         req.body = { ...req.body, ...pictDetails };
       }
       await eventsServices.editStepData(ticket, 3, req.body);
-      sendCookie(res, { ticket }, `/register/${event_name}`)
-        .status(200).json({success: true, ticket}).end()
+      res.status(200).json({success: true, ticket}).end()
     } catch (err) {
       next(err);
     }

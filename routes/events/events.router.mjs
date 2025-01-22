@@ -11,7 +11,7 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 	const { getPaymentDetails, getTicketDetails, getUserIDFile, getUserRegistration, getRegistration, getRegistrations, getPendingPayments, getSynopsis, getProjectAbstract, updateProjectAbstract, backupRegs, } = getRegistrationsController(eventsServices, filesServices, docServices)
 	const { saveProject, insertMember, getAddedMembers, saveCollegeDetails, requestRegistration, verifyPendingPayment, updateProject, insertInternalPICT, deleteMember, getTechfiestaMembers, addTechfiestaMembers, } = createRegistrationsController(eventsServices, filesServices, emailService)
 
-	eventsRouter.get('/ticket', ticketValidation(), validator, getTicketDetails)
+	eventsRouter.get('/ticket', getTicketDetails)
 	eventsRouter.get('/registrations/:event_name', verifyAdminValidation(2), validator, verifyAdminLogin, getRegistrations)
 	eventsRouter.get('/verify/:event_name', eventNameParamValidation(), getPaymentValidation(), verifyAdminValidation(3), validator, verifyAdminLogin, getPaymentDetails)
 	eventsRouter.get('/verify/file', fileValidation(), verifyAdminValidation(6), validator, verifyAdminLogin, getUserIDFile)
@@ -28,14 +28,14 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 	eventsRouter.use(registrationLimiter)
 	
 	eventsRouter.post('/step_1', saveProject)
-	eventsRouter.post('/step_2', memberIDParser, formDataParser, ticketValidation(), memberValidation(), insertMember)
-	eventsRouter.get('/getmemberdetails', ticketValidation(), memberValidation(), getAddedMembers)
+	eventsRouter.post('/step_2', memberIDParser, formDataParser, insertMember)
+	eventsRouter.get('/getmemberdetails', getAddedMembers)
 	eventsRouter.get('/techfiesta-members', getTechfiestaMembers)
 	eventsRouter.post('/techfiesta-members', addTechfiestaMembers);
-	eventsRouter.post('/step_3', ticketValidation(), collegeValidation(), saveCollegeDetails)
-	eventsRouter.post('/step_4', ticketValidation(), verifyPICTOrPayments(), requestRegistration)
+	eventsRouter.post('/step_3', saveCollegeDetails)
+	eventsRouter.post('/step_4', requestRegistration)
 	// Delete member
-	eventsRouter.delete('/deletememberdetails', ticketValidation(), memberValidation(), deleteMember)
+	eventsRouter.delete('/deletememberdetails', deleteMember)
 	// Get project abstract 
 	eventsRouter.post('/getabstract', getProjectAbstract)
 	eventsRouter.post('/updateabstract', updateProjectAbstract)
