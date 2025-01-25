@@ -15,7 +15,7 @@ function sendCookie(res, cookies, path) {
 }
 
 function clearCookie(res, key, path) {
-    res.clearCookie(key, { ...options, path })
+    res.cookie(key, "", { ...options, maxAge: 0, expires: new Date(0), path })
     return res
 }
 

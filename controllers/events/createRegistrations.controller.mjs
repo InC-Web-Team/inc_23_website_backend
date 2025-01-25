@@ -214,22 +214,19 @@ function createRegistrationsController(
     try {
       const { ticket } = req.body;
       const { event_name } = req.params;
-
-      // // console.log(ticket, ' ', event_name)
       const results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.step_no === 4) {
-
         const { pid } = await eventsServices.completeRegistration(
           event_name,
           results
         );
-        // // console.log('pid ', pid)
+        console.log('pid ', pid)
         // await emailService.eventRegistrationEmail(event_name, {
         //   ...results,
         //   pid,
         // });
-        res.status(201).end();
+        res.status(201).json({success: true}).end();
       } else if (results.step_no === 5 && results.payment_id !== "")
         throw new AppError(
           400,
@@ -293,6 +290,32 @@ function createRegistrationsController(
     }
   }
 
+  async function getAllTeamLeaders(req, res, next){
+    try {
+      const data = await eventsServices.getAllTeamLeaders();
+      function getEventName(ticket){
+        if(!ticket) return;
+        if(ticket[4] === 'I') return 'Impetus';
+        if(ticket[4] === 'C') return 'Concepts';
+        if(ticket[4] === 'P') return 'Pradnya';
+      } 
+      console.log('starting job to send mails');
+      let count = 0;
+      data.forEach(async (member) => {
+        if(member?.ticket && member?.email){
+          // await emailService.eventRegistrationEmail(getEventName(member?.ticket), {
+          //   email: member?.email,
+          // });
+          count++;
+        }
+      })
+      console.log('sent all mails successfully ', count);
+      res.json('mails sent successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   return {
     saveProject,
     insertMember,
@@ -305,6 +328,7 @@ function createRegistrationsController(
     deleteMember,
     getTechfiestaMembers,
     addTechfiestaMembers,
+    getAllTeamLeaders,
 
   };
 }

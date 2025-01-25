@@ -4,7 +4,7 @@ import { roles as rolesData } from '../../../static/adminData.mjs';
 function adminLoginValidation() {
 	return [
 		body('username').trim().isLength({ min: 6, max: 50 }).escape(),
-		body('password').isLength({ min: 8, max: 50 }).escape(),
+		body('password').isLength({ min: 6, max: 50 }).escape(),
 	]
 }
 

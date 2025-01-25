@@ -51,8 +51,49 @@ function getRegistrationsController(
         req.params.event_name
       );
       if (!results) throw new AppError(404, "fail", "No registrations found");
-      // // // console.log(results);
-      res.status(302).json(results);
+      console.log(results);
+      const processTeams = (name, email, phone) => {
+        const names = name.split(',');
+        const emails = email.split(',');
+        const phones = phone.split(',');
+        const teams = phones.map((phone, index) => ({
+          name: names[index],
+          email: emails[index],
+          phone
+        }))
+        return teams;
+      }
+      const filteredResults = results.map((item, index) => ({
+        id: index+1,
+        pid: item.pid,
+        judges_count: item.judges_count || 0,
+        evaluations: item.evaluations,
+        projectDetails: {
+          title: item.title,
+          abstract: item.abstract,
+          project_type: item.project_type,
+          sponsored: item.sponsored,
+          company: item.company,
+          nda: item.nda,
+          domain: item.domain,
+          guide_name: item.guide_name,
+          guide_email: item.guide_email,
+          guide_phone: item.guide_phone,
+          hod_email: item.hod_email,
+          techfiesta: item.techfiesta,
+        },
+        teamDetails: processTeams(item.name, item.email, item.phone),
+        collegeDetails: {
+          college: item.college,
+          year: item.year,
+          city: item.city,
+          district: item.district,
+          locality: item.locality,
+          mode: item.mode,
+        },
+        paymentId: item.payment_id,
+      }))
+      res.status(302).json(filteredResults);
     } catch (err) {
       next(err);
     }
@@ -95,6 +136,7 @@ function getRegistrationsController(
 
   async function getUserIDFile(req, res, next) {
     try {
+      console.log(req.query);
       const results = await filesServices.checkFile(req.query.email);
       if (!results)
         throw new AppError(404, "fail", "No file exist for this email");
@@ -141,21 +183,8 @@ function getRegistrationsController(
       const results = await eventsServices.getPendingPayments(
         req.params.event_name
       );
-      // // // console.log(results);
-      // const step_2_data = data.step_2;
-      // // // console.log(results[0].step_2);
       if (!results) throw new AppError(404, "fail", "No pending payments");
-      const filteredResults = results.map((item) => ({
-        email: item.step_2,
-        ticket: item.ticket,
-        payment_id: item.payment_id,
-        date: item.date,
-        mode: item.mode,
-        step_2: item.step_2,
-        step_3: item.step_3
-      }));
-      // // // console.log(filteredResults[0].step_2)
-      res.status(302).json(filteredResults);
+      res.status(200).json(results);
     } catch (err) {
       next(err);
     }
@@ -229,6 +258,15 @@ function getRegistrationsController(
     }
   }
 
+  async function getRegistrationsCount(req, res, next){
+    try {
+      const results = await eventsServices.countTicketCategories();
+      res.status(200).json(results[0]);
+    } catch (error) {
+      next(error)
+    }
+  }
+
   // async function backupRegs(req, res, next) {
   //   try {
   //     // let event_name = req.params.event_name;
@@ -253,6 +291,8 @@ function getRegistrationsController(
     updateProjectAbstract,
     getSynopsis,
     backupRegs,
+    getRegistrationsCount,
+
   };
 }
 

@@ -96,8 +96,8 @@ function eventsServices(db) {
     try {
       const [results] = await db
         .execute(
-          { sql: ticketQueries.getPayment, namedPlaceholders: true },
-          { pid, event_name: event_name[0].toUpperCase() }
+          ticketQueries.getPayment,
+          [event_name[0].toUpperCase(), pid]
         )
         .catch((err) => {
           throw new AppError(400, "fail", err.sqlMessage);
@@ -176,6 +176,32 @@ function eventsServices(db) {
     }
   }
 
+  async function getAllTeamLeaders(){
+    try {
+      const [results] = await db.execute('SELECT ticket, step_2 FROM inc_2025.tickets WHERE is_deleted = 0').catch((err) => console.log(err));
+      const leaders = results.map(result => {
+        if(Array.isArray(result.step_2) && result?.step_2[0]?.email){
+          return {ticket: result.ticket, email: result.step_2[0].email};
+        }
+      })
+      return leaders;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function countTicketCategories() {
+    try {
+      const [results] = await db.execute('CALL countTicketCategories();')
+      .catch((err) => {
+        throw new AppError(400, "fail", err.sqlMessage);
+      })
+      return results[0]
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async function completeRegistration(event_name, data) {
     try {
       const {
@@ -218,7 +244,6 @@ function eventsServices(db) {
       const techfiesta = '';
       const department = '';
 
-      // // console.log('here after data')
       let dataArray = [];
       switch (event_name) {
         case eventsName[0]:
@@ -662,12 +687,6 @@ function eventsServices(db) {
           }
           break;
       }
-      // // // console.log(data);
-      // // // console.log(eventsQueries.completeRegistration(event_name, step_2.length));
-      // // // console.log("dataArray = ", dataArray.length);
-
-      // // console.log(dataArray);
-      
       const [[results]] = await db
         .execute(
           eventsQueries.completeRegistration(event_name, step_2.length),
@@ -724,9 +743,6 @@ function eventsServices(db) {
       throw error;
     }
   }
-
-
-
 
   async function getProjects(event_name) {
     try {
@@ -1119,7 +1135,9 @@ function eventsServices(db) {
     insertBackup,
     getTechfiestaMembersFromId,
     saveRegistrationDetails,
-    
+    getAllTeamLeaders,
+    countTicketCategories,
+
   };
 }
 

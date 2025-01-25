@@ -27,9 +27,10 @@ function adminController(adminServices, docServices, judgeServices) {
           .json({ roles: user.roles, jid })
         return
       }
-      sendCookie(res, { admin_data: { token, roles: user.roles } })
+      else sendCookie(res, { admin_data: { token, roles: user.roles } })
         .status(200)
-        .end()
+        .json({ roles: user.roles, username })
+        .end();
     } catch (err) { next(err) }
   }
 
@@ -37,13 +38,11 @@ function adminController(adminServices, docServices, judgeServices) {
     try {
       res = await clearCookie(res, "admin_data");
       res = await clearCookie(res, "judge_data");
-      // // // console.log("logout")
       res.status(200).json({ message: "Logged out successfully" });
     } catch (err) {
       next(err);
     }
   }
-
 
   async function verifyAdminLogin(req, res, next) {
     try {
@@ -52,7 +51,8 @@ function adminController(adminServices, docServices, judgeServices) {
       const result = await adminServices.findAdmin(decode.username);
       if (!result)
         throw new AppError(404, "fail", "Invalid token, please login again");
-      res.status(200).end();
+      delete result.password;
+      res.status(200).json(result).end();
     } catch (err) {
       next(err);
     }
