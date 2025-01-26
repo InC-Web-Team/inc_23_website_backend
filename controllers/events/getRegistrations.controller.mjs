@@ -136,7 +136,6 @@ function getRegistrationsController(
 
   async function getUserIDFile(req, res, next) {
     try {
-      console.log(req.query);
       const results = await filesServices.checkFile(req.query.email);
       if (!results)
         throw new AppError(404, "fail", "No file exist for this email");

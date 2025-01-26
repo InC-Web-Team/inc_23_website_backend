@@ -1,6 +1,7 @@
 import { sendCookie, randomID, AppError } from "../../utils/index.js";
 import { eventsName, teamSize, projectTypes } from "../../static/eventsData.mjs";
 import { pictDetails } from "../../static/collegeDetails.mjs";
+import { whatsappLinks } from "../../static/adminData.mjs";
 
 function createRegistrationsController(
   eventsServices,
@@ -221,11 +222,18 @@ function createRegistrationsController(
           event_name,
           results
         );
-        console.log('pid ', pid)
-        // await emailService.eventRegistrationEmail(event_name, {
-        //   ...results,
-        //   pid,
-        // });
+        const formattedEventName = event_name[0].toUpperCase() + event_name.slice(1);
+        let formattedEmail = '';
+        if(Array.isArray(results.step_2)){
+          formattedEmail = results.step_2.map((member) => `${member.name} <${member.email}>`).slice(0, 2).join(',');
+        }
+        const whatsapp_url = whatsappLinks.get(event_name);
+        await emailService.eventRegistrationEmail(formattedEventName, {
+          ...results,
+          email: formattedEmail,
+          whatsapp_url,
+          pid,
+        });
         res.status(201).json({success: true}).end();
       } else if (results.step_no === 5 && results.payment_id !== "")
         throw new AppError(

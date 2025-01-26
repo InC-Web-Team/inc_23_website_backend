@@ -14,8 +14,11 @@ const officialEmails = new Map([
     ['official', 'inc@pict.edu']
 ])
 
-
-
+const whatsappLinks = new Map([
+  ['impetus', 'https://chat.whatsapp.com/CjqqvrD2TAnHXrr4iVyjlf'],
+  ['concepts', 'https://chat.whatsapp.com/FXFSXwc285dADXNeLy7N1C'],
+  ['pradnya', 'https://chat.whatsapp.com/DxWfPhRTrhi2eCU3NMdloL'],
+])
 
 const projects = [
     {
@@ -1351,4 +1354,5 @@ export {
     officialEmails,
     projects,
     projectsDomain2,
+    whatsappLinks,
 }

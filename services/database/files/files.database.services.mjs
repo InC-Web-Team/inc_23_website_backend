@@ -25,12 +25,12 @@ function filesServices(db) {
             throw new AppError(500, 'fail', err.message || err)
         }
         finally{
-					unlink(path, (err) => {
-						if (err) {
-							console.error(`Error removing file: ${err}`);
-							return;
-						}
-					});
+            unlink(path, (err) => {
+                if (err) {
+                    console.error(`Error removing file: ${err}`);
+                    return;
+                }
+            });
         }
     }
 

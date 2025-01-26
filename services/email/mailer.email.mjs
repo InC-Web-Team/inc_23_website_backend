@@ -34,19 +34,13 @@ function emailService() {
 
     async function eventRegistrationEmail(event_name, data) {
         try {
-
-            // const mailOptions = {
-            //     from: `InC'2025 <${officialEmails.get('queries')}>`,
-            //     to: data.step_2.map(participant => `${participant.name} <${participant.email}>`).join(', '),
-            //     bcc: `${officialEmails.get('queries')},${officialEmails.get(event_name)}`,
-            //     replyTo: officialEmails.get('queries'),
-            //     subject: `Registered for PICT InC 2025 - ${event_name}`,
-            //     priority: 'high',
-            //     text: 'Email content',
-            //     html: await emailTemplates.eventRegistrationEmail({ ...data, event_name })
-            // };
-            // console.log(event_name, data);
-            const tempMailOptions = {
+            const dynamicData = {
+                event_name,
+                team_id: data.pid,
+                tentative_dates: "21st - 23rd March",
+                whatsapp_url: data.whatsapp_url,
+            }
+            const mailOptions = {
                 from: `InC 2025 <${officialEmails.get('queries')}>`,
                 to: data.email,
                 bcc: `${officialEmails.get('queries')},${officialEmails.get(event_name.toLowerCase())}`,
@@ -54,9 +48,9 @@ function emailService() {
                 subject: `Registered for PICT InC 2025 - ${event_name}`,
                 priority: 'high',
                 text: 'Email content',
-                html: await emailTemplates.eventRegistrationEmail({event_name}),
+                html: await emailTemplates.eventRegistrationEmail(dynamicData),
             };
-            eventEmailTransporter.sendMail(tempMailOptions).then((e) => console.log('email sent to ', data.email)).catch(e => console.log(e));
+            eventEmailTransporter.sendMail(mailOptions).then((e) => {}).catch((e) => {console.log(e)});
             return "Emails sent successfully";
         } catch (err) {
             throw err;
