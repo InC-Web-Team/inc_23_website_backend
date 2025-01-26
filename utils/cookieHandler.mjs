@@ -5,7 +5,6 @@ const options = {
     secure: true,
     signed: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
-    partitioned: true,
 }
 
 function sendCookie(res, cookies, path) {
@@ -14,7 +13,6 @@ function sendCookie(res, cookies, path) {
     }
     return res
 }
-
 
 function clearCookie(res, key, path) {
     res.cookie(key, "", { ...options, maxAge: 0, expires: new Date(0), path })
