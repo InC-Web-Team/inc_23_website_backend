@@ -8,30 +8,11 @@ const options = {
     partitioned: true,
 }
 
-// function sendCookie(res, cookies, path) {
-//     for (const key in cookies) {
-//         res.cookie(key, cookies[key], { ...options, path: path ? process.env.FRONTEND_URL + path : '/' })
-//     }
-//     return res
-// }
-
 function sendCookie(res, cookies, path) {
     for (const key in cookies) {
-        const cookieOptions = {
-            ...options,
-            path: path ? process.env.FRONTEND_URL + path : '/',
-            partitioned: true,
-        };
-
-        let cookieStr = `${key}=${cookies[key]}; HttpOnly; Max-Age=${cookieOptions.maxAge}; Path=${cookieOptions.path}; Secure; SameSite=${cookieOptions.sameSite}`;
-        
-        if (cookieOptions.partitioned) {
-            cookieStr += '; Partitioned';
-        }
-
-        res.setHeader('Set-Cookie', cookieStr);
+        res.cookie(key, cookies[key], { ...options, path: path ? process.env.FRONTEND_URL + path : '/' })
     }
-    return res;
+    return res
 }
 
 
