@@ -9,8 +9,7 @@ import { apiLimiter, registrationLimiter } from './rateLimiter.mjs';
 import validator from './validator.mjs';
 
 function initializeMiddlewares(dbService) {
-    const { verifyAdminLogin } = protectRoute(dbService.adminServices)
-    const { verifyJudgeLogin } = protectRoute(dbService.adminServices)
+    const { verifyAdminLogin, verifyJudgeLogin, verifyAdminLoginAndAdminRole } = protectRoute(dbService.adminServices)
 
     function useDefaultMiddlewares(server) {
         server.use([
@@ -36,6 +35,8 @@ function initializeMiddlewares(dbService) {
         apiLimiter,
         registrationLimiter,
         validator,
+        verifyAdminLoginAndAdminRole,
+        
     }
 }
 
