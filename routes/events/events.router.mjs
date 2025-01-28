@@ -12,10 +12,10 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 
 	eventsRouter.get('/ticket', getTicketDetails)
 	// get registrations count
-	eventsRouter.get('/registrations-count', verifyAdminValidation(2), validator, verifyAdminLogin, getRegistrationsCount);
+	eventsRouter.get('/registrations-count', verifyAdminValidation(3), validator, verifyAdminLogin, getRegistrationsCount);
 
 	 // get verified registrations
-	eventsRouter.get('/registrations/:event_name', verifyAdminValidation(2), validator, verifyAdminLogin, getRegistrations)
+	eventsRouter.get('/registrations/:event_name', verifyAdminValidation(3), validator, verifyAdminLogin, getRegistrations)
 
 	 // get ticket by event name and pid 
 	eventsRouter.get('/verify/:event_name', eventNameParamValidation(), verifyAdminValidation(3), validator, verifyAdminLogin, getPaymentDetails)
@@ -27,7 +27,7 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 	eventsRouter.get('/verify/payment/:event_name', eventNameParamValidation(), verifyAdminValidation(3), validator, verifyAdminLogin, getPendingPayments)
 
 	// verify payment and process db's
-	eventsRouter.post('/verify/payment/:event_name', eventNameParamValidation(), paymentValidation(), verifyAdminValidation(3), validator, verifyAdminLoginAndAdminRole, verifyPendingPayment)
+	eventsRouter.post('/verify/payment/:event_name', eventNameParamValidation(), paymentValidation(), verifyAdminValidation(2), validator, verifyAdminLoginAndAdminRole, verifyPendingPayment)
 
 	// get registration status
 	eventsRouter.get('/verify/registration', getRegistrationValidation(), validator, getRegistration)
