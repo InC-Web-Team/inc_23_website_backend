@@ -71,7 +71,7 @@ function createBackupController(eventsServices, adminServices){
         console.log(`Batch with offset ${offset} backed up successfully.`);
       }
   
-      const now = new Date(new Date().toLocaleString('en-Us', {timeZone: 'Etc/GMT+7'}));
+      const now = new Date(new Date().toLocaleString('en-US', {timeZone: 'Etc/GMT+7'}));
       await server2Connection.execute("UPDATE backup_logs SET last_backup=? WHERE table_name='tickets'", [now]);
   
       res.send('Incremental backup completed successfully.');
