@@ -15,14 +15,14 @@ function initializeMiddlewares(dbService) {
     function useDefaultMiddlewares(server) {
         server.use([
             cors({
-                origin: 'https://pictinc.org',
+                origin: true,
                 credentials: true,
                 preflightContinue: true,
             }), // Allow Cross-Origin requests,
             helmet(), // Set security HTTP headers
             cookieParser(process.env.COOKIE_SECRET), // Parse Cookie header and populate req.signedCookie with an object keyed by the cookie names
-            express.json({ limit: '147kb' }),
-            express.urlencoded({ extended: true }),
+            express.json({ limit: '512kb' }),
+            express.urlencoded({ extended: true, limit: '512kb' }),
         ])
         return server
     }
