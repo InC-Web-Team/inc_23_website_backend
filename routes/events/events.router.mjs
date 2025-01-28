@@ -45,6 +45,7 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 	eventsRouter.post('/step_1', saveProject)
 	eventsRouter.post('/step_2', (req, res, next) => {
 		memberIDParser(req, res, (err) => {
+			console.log('in member id error ', err);
 			if (err) {
 				if (err.code === 'LIMIT_FILE_SIZE') {
 					return res.status(400).json({ message: 'File too large. Maximum size is 512 KB.' });
