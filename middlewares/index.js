@@ -15,7 +15,7 @@ function initializeMiddlewares(dbService) {
     function useDefaultMiddlewares(server) {
         server.use([
             cors({
-                origin: true,
+                origin: 'https://pictinc.org',
                 credentials: true,
                 preflightContinue: true,
             }), // Allow Cross-Origin requests,
