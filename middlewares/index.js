@@ -21,8 +21,8 @@ function initializeMiddlewares(dbService) {
             }), // Allow Cross-Origin requests,
             helmet(), // Set security HTTP headers
             cookieParser(process.env.COOKIE_SECRET), // Parse Cookie header and populate req.signedCookie with an object keyed by the cookie names
-            express.json({ limit: '512kb' }),
-            express.urlencoded({ extended: true, limit: '512kb' }),
+            express.json({ limit: '600kb' }),
+            express.urlencoded({ extended: true, limit: '600kb' }),
         ])
         return server
     }
