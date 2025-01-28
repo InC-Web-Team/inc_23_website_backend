@@ -43,7 +43,17 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 	eventsRouter.use(registrationLimiter)
 	
 	eventsRouter.post('/step_1', saveProject)
-	eventsRouter.post('/step_2', memberIDParser, formDataParser, insertMember)
+	eventsRouter.post('/step_2', (req, res, next) => {
+		memberIDParser(req, res, (err) => {
+			if (err) {
+				if (err.code === 'LIMIT_FILE_SIZE') {
+					return res.status(400).json({ message: 'File too large. Maximum size is 512 KB.' });
+				}
+				return res.status(400).json({ message: err.message || 'Error uploading file.' });
+			}
+			next();
+		});
+	}, formDataParser, insertMember);
 	eventsRouter.get('/getmemberdetails', getAddedMembers)
 	eventsRouter.get('/techfiesta-members', getTechfiestaMembers)
 	eventsRouter.post('/techfiesta-members', addTechfiestaMembers);
