@@ -1,4 +1,4 @@
-const roles = ['WEB_MASTER', 'ADMIN', 'PAYMENTS', 'CONCEPTS_ADMIN', 'IMPETUS_ADMIN', 'PRADNYA_ADMIN', 'JUDGE']
+const roles = ['WEB_MASTER', 'ADMIN', 'VIEWER', 'PAYMENTS', 'CONCEPTS_ADMIN', 'IMPETUS_ADMIN', 'PRADNYA_ADMIN', 'JUDGE']
 
 const groupLinks = new Map([
     ['concepts', ['Concepts Judging (InC\'24)', 'https://chat.whatsapp.com/D9ySvNZzL1HL4Vk30pKyGv']],
