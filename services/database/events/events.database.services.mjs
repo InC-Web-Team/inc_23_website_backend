@@ -1051,6 +1051,26 @@ function eventsServices(db) {
     }
   }
 
+  async function getAllTicketsCountForBackup(lastBackupTimestamp){
+    try {
+      const [results] = await db.execute(eventsQueries.getAllTicketsCountForBackup(), [lastBackupTimestamp])
+      .catch(err => {throw new AppError(400, 'fail', err.sqlMessage)}); 
+      return results[0].total;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function getAllTicketsForBackup(lastBackupTimestamp, BATCH_SIZE, offset){
+    try {
+      const [results] = await db.execute(eventsQueries.getAllTicketsForBackup(), [lastBackupTimestamp, BATCH_SIZE, offset])
+      .catch(err => {throw new AppError(400, 'fail', err.sqlMessage)}); 
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // async function insertBackup(results) {
   //   try {
   //     for (const backupData of results) {
@@ -1137,7 +1157,9 @@ function eventsServices(db) {
     saveRegistrationDetails,
     getAllTeamLeaders,
     countTicketCategories,
-
+    getAllTicketsCountForBackup,
+    getAllTicketsForBackup,
+    
   };
 }
 

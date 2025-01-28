@@ -13,7 +13,6 @@ function adminServices(db) {
 
   async function loginJudge(data) {
     try {
-      // // // console.log(data)
       const [results] = await db
         .execute(
           { sql: judgesQueries.loginJudge, namedPlaceholders: true },
@@ -31,6 +30,7 @@ function adminServices(db) {
   return {
     findAdmin,
     loginJudge,
+    
   }
 }
 

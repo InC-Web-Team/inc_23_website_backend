@@ -80,6 +80,13 @@ function eventsQueries(tableName) {
         return `CALL getTechfiestaMembers(?)`;
     }
 
+    const getAllTicketsCountForBackup = () => {
+        return 'SELECT COUNT(*) AS total FROM tickets WHERE date > ?';
+    }
+
+    const getAllTicketsForBackup = () => {
+        return 'SELECT * FROM tickets WHERE date > ? ORDER BY date LIMIT ? OFFSET ?';
+    }
 
     return {
         checkUserRegistration,
@@ -94,7 +101,9 @@ function eventsQueries(tableName) {
         updateProject,
         getBackups,
         getTechfiestaMembers,
-
+        getAllTicketsCountForBackup,
+        getAllTicketsForBackup,
+        
     }
 }
 
