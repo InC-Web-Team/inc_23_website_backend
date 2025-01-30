@@ -53,7 +53,7 @@ function createBackupController(eventsServices, adminServices){
         await server2Connection.beginTransaction();
   
         const insertQuery =
-          'INSERT INTO tickets (ticket, pid, step_1, step_2, step_3, step_no, payment_id, date, is_deleted) VALUES ?';
+          'REPLACE INTO tickets (ticket, pid, step_1, step_2, step_3, step_no, payment_id, date, is_deleted) VALUES ?';
         const values = rows.map(row => [
           row.ticket,
           row.pid,
@@ -65,6 +65,8 @@ function createBackupController(eventsServices, adminServices){
           row.date,
           row.is_deleted,
         ]);
+        console.log('here just before insert');
+
         await server2Connection.query(insertQuery, [values]);
   
         await server2Connection.commit();
