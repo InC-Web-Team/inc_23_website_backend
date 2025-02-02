@@ -185,10 +185,6 @@ function createRegistrationsController(
           "Registration done using this ticket and payment under verification"
         );
       else if (results.step_no === 3) {
-        const dbPaymentId = await eventsServices.checkPaymentIdExist(req.body.payment_id);
-        if(dbPaymentId.trim() === req.body.payment_id.trim()){
-          throw new AppError(400, "fail", "Transaction ID already used");
-        }
         const { isPICT, isInternational } = results.step_3;
         const { techfiesta, team_id } = results.step_1;
         if(techfiesta === "1"){
@@ -197,6 +193,12 @@ function createRegistrationsController(
           req.body = { ...req.body, payment_id: "PICT" };
         } else if (isInternational === "1") {
           req.body = { ...req.body, payment_id: "INTERNATIONAL" };
+        }
+        else {
+          const dbPaymentId = await eventsServices.checkPaymentIdExist(req.body.payment_id);
+          if(dbPaymentId.trim() === req.body.payment_id.trim()){
+            throw new AppError(400, "fail", "Transaction ID already used");
+          }
         }
         req.body = { ...req.body, team_id: team_id || '' };
         await eventsServices.saveRegistrationDetails({ ...req.body, ticket, event }, 4);
