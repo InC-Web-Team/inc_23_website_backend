@@ -202,6 +202,18 @@ function eventsServices(db) {
     }
   }
 
+  async function checkPaymentIdExist(payment_id) {
+    try {
+      const [results] = await db.execute(ticketQueries.checkPaymentIdExist, [payment_id])
+      .catch((err) => {
+        throw new AppError(400, "fail", err.sqlMessage);
+      })
+      return results[0]?.payment_id || '';
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async function completeRegistration(event_name, data) {
     try {
       const {
@@ -1159,7 +1171,8 @@ function eventsServices(db) {
     countTicketCategories,
     getAllTicketsCountForBackup,
     getAllTicketsForBackup,
-    
+    checkPaymentIdExist,
+
   };
 }
 

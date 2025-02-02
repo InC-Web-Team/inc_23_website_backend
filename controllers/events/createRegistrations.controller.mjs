@@ -176,7 +176,6 @@ function createRegistrationsController(
   async function requestRegistration(req, res, next) {
     try {
       const { event, ticket } = req.query;
-      // // console.log(ticket);
       let results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.payment_id !== "")
@@ -186,6 +185,10 @@ function createRegistrationsController(
           "Registration done using this ticket and payment under verification"
         );
       else if (results.step_no === 3) {
+        const dbPaymentId = await eventsServices.checkPaymentIdExist(req.body.payment_id);
+        if(dbPaymentId.trim() === req.body.payment_id.trim()){
+          throw new AppError(400, "fail", "Transaction ID already used");
+        }
         const { isPICT, isInternational } = results.step_3;
         const { techfiesta, team_id } = results.step_1;
         if(techfiesta === "1"){
@@ -195,7 +198,6 @@ function createRegistrationsController(
         } else if (isInternational === "1") {
           req.body = { ...req.body, payment_id: "INTERNATIONAL" };
         }
-        // // console.log(techfiesta, team_id);
         req.body = { ...req.body, team_id: team_id || '' };
         await eventsServices.saveRegistrationDetails({ ...req.body, ticket, event }, 4);
         res.status(201).json({success: true, ticket}).end()

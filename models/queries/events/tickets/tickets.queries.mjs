@@ -17,10 +17,11 @@ function ticketQueries(tableName) {
 
     const saveRegistrationDetails = `CALL saveRegistrationDetails(?, ?, ?, ?, ?)`;
 
+    const checkPaymentIdExist = `SELECT payment_id FROM tickets WHERE payment_id = ?`;
+
     // const deleteMemberDetailsFromTicket = `UPDATE tickets
     // SET step_2 = JSON_REMOVE(step_2, ${index})
     // WHERE ticket = ?;`
-
 
     return {
         checkTicket,
@@ -31,6 +32,8 @@ function ticketQueries(tableName) {
         editStepData,
         editPaymentAndStep,
         saveRegistrationDetails,
+        checkPaymentIdExist,
+
         // deleteMemberDetailsFromTicket
     }
 }
