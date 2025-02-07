@@ -7,7 +7,7 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 	const { registrationLimiter, verifyAdminLogin, validator, memberIDParser, formDataParser, verifyAdminLoginAndAdminRole, } = middlewares
 	const { getPaymentValidation, ticketValidation, getRegistrationValidation, paymentValidation, fileValidation, eventNameParamValidation, getUserRegistrationValidation, projectValidation, memberValidation, collegeValidation, verifyPICTOrPayments } = eventsValidations
 	const { verifyAdminValidation } = adminValidations
-	const { getPaymentDetails, getTicketDetails, getUserIDFile, getUserRegistration, getRegistration, getRegistrations, getPendingPayments, getSynopsis, getProjectAbstract, updateProjectAbstract, backupRegs, getRegistrationsCount, } = getRegistrationsController(eventsServices, filesServices, docServices)
+	const { getPaymentDetails, getTicketDetails, getUserIDFile, getUserRegistration, getRegistration, getRegistrations, getPendingPayments, getSynopsis, getProjectAbstract, updateProjectAbstract, backupRegs, getRegistrationsCount, getIncompleteRegistrations, } = getRegistrationsController(eventsServices, filesServices, docServices)
 	const { saveProject, insertMember, getAddedMembers, saveCollegeDetails, requestRegistration, verifyPendingPayment, updateProject, insertInternalPICT, deleteMember, getTechfiestaMembers, addTechfiestaMembers, getAllTeamLeaders, } = createRegistrationsController(eventsServices, filesServices, emailService)
 
 	eventsRouter.get('/ticket', getTicketDetails)
@@ -16,6 +16,9 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 
 	 // get verified registrations
 	eventsRouter.get('/registrations/:event_name', verifyAdminValidation(3), validator, verifyAdminLogin, getRegistrations)
+
+	// get incomplete registrations
+	eventsRouter.get('/incomplete-registrations/:event_name', verifyAdminValidation(3), validator, verifyAdminLogin, getIncompleteRegistrations)
 
 	 // get ticket by event name and pid 
 	eventsRouter.get('/verify/:event_name', eventNameParamValidation(), verifyAdminValidation(3), validator, verifyAdminLogin, getPaymentDetails)

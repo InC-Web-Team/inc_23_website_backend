@@ -65,7 +65,6 @@ function createBackupController(eventsServices, adminServices){
           row.date,
           row.is_deleted,
         ]);
-        console.log('here just before insert');
 
         await server2Connection.query(insertQuery, [values]);
   

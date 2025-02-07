@@ -51,7 +51,6 @@ function getRegistrationsController(
         req.params.event_name
       );
       if (!results) throw new AppError(404, "fail", "No registrations found");
-      console.log(results);
       const processTeams = (name, email, phone) => {
         const names = name.split(',');
         const emails = email.split(',');
@@ -189,6 +188,18 @@ function getRegistrationsController(
     }
   }
 
+  async function getIncompleteRegistrations(req, res, next) {
+    try {
+      const results = await eventsServices.getIncompleteRegistrations(
+        req.params.event_name
+      );
+      if (!results) throw new AppError(404, "fail", "No Incomplete Registrations");
+      res.status(200).json(results);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async function getProjectAbstract(req, res, next) {
     try {
       const { pid } = req.body
@@ -280,6 +291,7 @@ function getRegistrationsController(
     getSynopsis,
     backupRegs,
     getRegistrationsCount,
+    getIncompleteRegistrations,
 
   };
 }
