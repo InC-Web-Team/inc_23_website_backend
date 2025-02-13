@@ -45,7 +45,7 @@ function createRegistrationsController(
         throw new AppError(
           404,
           "fail",
-          `Email ${user_email.email} already registered for ${event_name}`
+          `Email ${email} already registered for ${event_name}`
         );
       const member_id_file = req.file;
       const isTicketExists = await eventsServices.getTicketDetails(ticket);
