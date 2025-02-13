@@ -11,7 +11,6 @@ function adminController(adminServices, docServices, judgeServices) {
     try {
       const { username, password } = req.body;
       const user = await adminServices.findAdmin(username);
-      console.log(user);
       if (!user)
         throw new AppError(404, "fail", "Admin account does not exist");
       if (user.password !== password) {
