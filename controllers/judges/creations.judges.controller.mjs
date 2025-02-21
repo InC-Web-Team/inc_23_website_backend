@@ -13,25 +13,26 @@ function creationsJudgesController(judgesServices, emailService) {
         'concepts': 'Concepts',
         'impetus': 'Impetus'
       };
-
+      
       await judgesServices.insertJudge({
         events: [events],
-        ...rest, // Spread the rest of the properties
+        ...rest,
         jid,
         password,
-        roles: [roles[6]],
+        roles: [roles[7], roles[2]],
       });
 
       // change the events in camel case 
 
-      await emailService.judgeRegistrationEmail({
-        events: [eventNames[events]],
-        ...rest, // Spread the rest of the properties
-        jid,
-        password,
-        group_link: groupLinks.get(events),
-      });
-      res.status(201).end();
+      // await emailService.judgeRegistrationEmail({
+      //   events: [eventNames[events]],
+      //   ...rest,
+      //   jid,
+      //   password,
+      //   group_link: groupLinks.get(events),
+      // });
+      
+      res.status(201).json({success: true});
     } catch (err) {
       next(err);
     }

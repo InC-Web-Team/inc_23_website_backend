@@ -25,11 +25,11 @@ function adminController(adminServices, docServices, judgeServices) {
         sendCookie(res, { judge_data: { token, roles: user.roles } })
           .status(200)
           .json({ roles: user.roles, jid })
-        return
+          .end();
       }
       else sendCookie(res, { admin_data: { token, roles: user.roles } })
         .status(200)
-        .json({ roles: user.roles, username })
+        .json({ roles: user.roles })
         .end();
     } catch (err) { next(err) }
   }

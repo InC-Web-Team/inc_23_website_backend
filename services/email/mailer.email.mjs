@@ -50,7 +50,8 @@ function emailService() {
                 text: 'Email content',
                 html: await emailTemplates.eventRegistrationEmail(dynamicData),
             };
-            eventEmailTransporter.sendMail(mailOptions).then((e) => {}).catch((e) => {console.log(e)});
+            
+            eventEmailTransporter.sendMail(mailOptions).then((e) => {}).catch((e) => {throw e});
             return "Emails sent successfully";
         } catch (err) {
             throw err;

@@ -304,24 +304,17 @@ function createRegistrationsController(
 
   async function getAllTeamLeaders(req, res, next){
     try {
-      const data = await eventsServices.getAllTeamLeaders();
-      function getEventName(ticket){
-        if(!ticket) return;
-        if(ticket[4] === 'I') return 'Impetus';
-        if(ticket[4] === 'C') return 'Concepts';
-        if(ticket[4] === 'P') return 'Pradnya';
-      } 
+      const event_name = 'impetus';
       console.log('starting job to send mails');
-      let count = 0;
-      data.forEach(async (member) => {
-        if(member?.ticket && member?.email){
-          // await emailService.eventRegistrationEmail(getEventName(member?.ticket), {
-          //   email: member?.email,
-          // });
-          count++;
-        }
-      })
-      console.log('sent all mails successfully ', count);
+      const whatsapp_url = whatsappLinks.get(event_name);
+      const formattedEventName = event_name[0].toUpperCase() + event_name.slice(1);
+      const formattedEmail = 'chinmay.22320116@viit.ac.in,pranali.22320010@viit.ac.in';
+      // await emailService.eventRegistrationEmail(formattedEventName, {
+      //   email: formattedEmail,
+      //   whatsapp_url,
+      //   pid: 'IM-OT0008',
+      // });
+      console.log('sent all mails successfully');
       res.json('mails sent successfully');
     } catch (error) {
       next(error);

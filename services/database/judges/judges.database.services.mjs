@@ -33,7 +33,6 @@ function judgesServices(db) {
 
   async function insertJudge(data) {
     try {
-      // // // console.log(data)
       await db.execute(
         { sql: judgesQueries.insertJudge, namedPlaceholders: true },
         data
@@ -48,7 +47,7 @@ function judgesServices(db) {
           "Judge already exists for given email-phone combination"
         );
       }
-      throw new AppError(400, "fail", err.sqlMessage);
+      else throw new AppError(400, "fail", err.sqlMessage);
     }
   }
 

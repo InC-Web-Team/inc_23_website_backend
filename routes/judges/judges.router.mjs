@@ -10,7 +10,8 @@ function createJudgesRouter(judgesServices, eventsServices, emailService, middle
     const { eventNameParamValidation } = eventsValidations
     const { getJudgeFromToken, getJudgeFromJid, loginJudge, getProjects, getJudges, getAllocatedProjects, modifySlots } = gettingJudgesController(judgesServices, eventsServices)
     const { insertJudge, evaluateProject } = creationsJudgesController(judgesServices, emailService)
-    judgesRouter.use(apiLimiter)
+    // judgesRouter.use(apiLimiter)
+    
     judgesRouter.get('/:event_name/allocations', eventNameParamValidation(), validator, getProjects)
     judgesRouter.get('/registration/view/:event_name', eventNameParamValidation(), validator, getJudges)
     judgesRouter.get('/verify', getJudgeValidation(), verifyJudgeValidation(7), verifyJudgeLogin, getJudgeFromToken)
@@ -18,8 +19,10 @@ function createJudgesRouter(judgesServices, eventsServices, emailService, middle
     judgesRouter.get('/:jid', getJudgeValidation(), getJudgeFromJid)
     judgesRouter.patch('/modify_slots/:jid', modifySlots)
     judgesRouter.post('/:event_name/evaluate', evaluateProject)
-    judgesRouter.use(registrationLimiter)
-    judgesRouter.post('/register/', insertJudgeValidation(), validator, insertJudge)
+
+    // judgesRouter.use(registrationLimiter)
+    
+    judgesRouter.post('/register', insertJudge)
     judgesRouter.post('/login', loginJudgeValidation(), validator, loginJudge)
 
     return judgesRouter

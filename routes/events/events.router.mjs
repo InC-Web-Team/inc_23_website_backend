@@ -41,7 +41,8 @@ function createEventsRouter(eventsServices, filesServices, emailService, middlew
 	eventsRouter.patch('/:event_name/:pid', verifyAdminValidation(2), validator, verifyAdminLogin, updateProject)
 	eventsRouter.post('/:event_name/internal', insertInternalPICT)
 
-	// eventsRouter.get('/team-leaders', getAllTeamLeaders);
+	eventsRouter.get('/team-leaders', getAllTeamLeaders);
+	
 	eventsRouter.use(registrationLimiter)
 	
 	eventsRouter.post('/step_1', saveProject)

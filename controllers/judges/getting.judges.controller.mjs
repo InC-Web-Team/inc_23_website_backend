@@ -62,9 +62,9 @@ function gettingJudgesController(judgesServices, eventsService) {
     async function getJudgeFromJid(req, res, next) {
         try {
             const { jid } = req.params
-            // // // console.log(jid)
+            console.log(jid)
             const judge = await judgesServices.getJudge(jid )
-            res.status(302).json(judge)
+            res.status(200).json(judge)
         } catch (err) { next(err) }
     }
 

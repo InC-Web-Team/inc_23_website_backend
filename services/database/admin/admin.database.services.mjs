@@ -30,7 +30,6 @@ function adminServices(db) {
   return {
     findAdmin,
     loginJudge,
-    
   }
 }
 

@@ -11,7 +11,7 @@ function createAllocationsRouter(emailServices, allocationServices, eventsServic
     const {getLabs, getEvalstats} = getAllocationController(allocationServices, emailServices, eventsServices, judgeServices)
     const { getAllocatedProjectsofJudge  } = gettingJudgesController(judgeServices, eventsServices)
     allocationsRouter.patch("/:event_name/lab", verifyAdminValidation(2), validator, verifyAdminLogin, labAllocate)
-    allocationsRouter.post("/:event_name/allocate", verifyAdminValidation(2), validator, verifyAdminLogin, allocate)
+    allocationsRouter.post("/:event_name/allocate", allocate)
     allocationsRouter.patch("/:event_name/deallocate",  deallocate)
     allocationsRouter.get("/:event_name/labs", getLabs)
     // get projects allocated to judges
