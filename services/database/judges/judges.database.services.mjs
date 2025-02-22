@@ -86,6 +86,7 @@ function judgesServices(db) {
   async function getAllocatedProjects(jid) {
     try {
       // // // console.log(jid)
+      console.log(judgesQueries.getAllocatedProjects(jid, eventsName[1]));
       const [conceptsResults] = await db
         .execute(judgesQueries.getAllocatedProjects(jid, eventsName[0]))
         .catch((err) => {
@@ -96,6 +97,7 @@ function judgesServices(db) {
         .catch((err) => {
           throw new AppError(400, "fail", err.sqlMessage);
         });
+      console.log(conceptsResults, impetusResults);
       return { concepts: conceptsResults, impetus: impetusResults };
     } catch (err) {
       throw err;
@@ -118,21 +120,18 @@ function judgesServices(db) {
       switch (event_name) {
         case eventsName[1]:
           await db.execute({ sql: judgesQueries.insertImpetusEvaluation, namedPlaceholders: true }, data).catch(err => {
-
             throw new AppError(400, 'fail', err.sqlMessage)
           })
-          break
-
+          break;
         case eventsName[0]:
           await db.execute({ sql: judgesQueries.insertConceptsEvaluation, namedPlaceholders: true }, data).catch(err => {
             throw new AppError(400, 'fail', err.sqlMessage)
           })
-          break
-
+          break;
         default:
           throw new AppError(400, "fail", "Invalid event name")
       }
-      return
+      return;
     } catch (err) {
       throw err
     }

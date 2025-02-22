@@ -12,7 +12,6 @@ function getAllocationController(allocationServices, emailServices, eventsServic
     async function getEvalstats(req, res, next) {
         try {
             const {event_name} = req.params;
-            // // // console.log(event_name)
             const evals = await allocationServices.evalStats(event_name);
             res.status(200).json(evals)
         } catch (error) {

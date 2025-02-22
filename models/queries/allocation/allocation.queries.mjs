@@ -22,22 +22,20 @@ function allocationQueries() {
   const getLabs = (event_name) => `SELECT pid,title,lab FROM ${event_name}_projects p;`
 
   const getEvalStats = (event_name, pid) => `SELECT
-  a.pid,
-  COUNT(*) AS allocated,
-  (
-    SELECT COUNT(*)
-    FROM ${event_name}_evaluation ce
-    WHERE ce.pid = a.pid
-  ) AS evaluated
-FROM
-  allocations a
-WHERE
-  a.pid LIKE '${pid}'
-GROUP BY
-  a.pid;
-;
-  `;
-
+    a.pid,
+    COUNT(*) AS allocated,
+    (
+      SELECT COUNT(*)
+      FROM ${event_name}_evaluation ce
+      WHERE ce.pid = a.pid
+    ) AS evaluated
+  FROM
+    allocations a
+  WHERE
+    a.pid LIKE '${pid}'
+  GROUP BY
+    a.pid;
+  ;`;
 
   return {
     updateLab,

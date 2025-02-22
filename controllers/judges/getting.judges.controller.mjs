@@ -14,7 +14,7 @@ function gettingJudgesController(judgesServices, eventsService) {
         try {
             const { event_name } = req.params
             const judges = await judgesServices.getJudges(event_name)
-            res.status(302).json(judges)
+            res.status(200).json(judges)
         } catch (err) { next(err) }
     }
 
@@ -62,7 +62,6 @@ function gettingJudgesController(judgesServices, eventsService) {
     async function getJudgeFromJid(req, res, next) {
         try {
             const { jid } = req.params
-            console.log(jid)
             const judge = await judgesServices.getJudge(jid )
             res.status(200).json(judge)
         } catch (err) { next(err) }

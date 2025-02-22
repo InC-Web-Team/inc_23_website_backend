@@ -63,10 +63,11 @@ function getRegistrationsController(
         return teams;
       }
       const filteredResults = results.map((item, index) => ({
-        id: index+1,
+        id: index,
         pid: item.pid,
         judges_count: item.judges_count || 0,
-        evaluations: item.evaluations,
+        evaluations: item.evaluations || "N/A",
+        judging_within_allocations: item.judging_within_allocations || 0,
         projectDetails: {
           title: item.title,
           abstract: item.abstract,

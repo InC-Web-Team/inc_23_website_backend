@@ -232,12 +232,12 @@ function createRegistrationsController(
           formattedEmail = results.step_2.map((member) => `${member.name} <${member.email}>`).slice(0, 2).join(',');
         }
         const whatsapp_url = whatsappLinks.get(event_name);
-        await emailService.eventRegistrationEmail(formattedEventName, {
-          ...results,
-          email: formattedEmail,
-          whatsapp_url,
-          pid,
-        });
+        // await emailService.eventRegistrationEmail(formattedEventName, {
+        //   ...results,
+        //   email: formattedEmail,
+        //   whatsapp_url,
+        //   pid,
+        // });
         res.status(201).json({success: true}).end();
       } else if (results.step_no === 5 && results.payment_id !== "")
         throw new AppError(

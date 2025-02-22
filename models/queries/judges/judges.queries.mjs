@@ -6,7 +6,7 @@ function judgesQueries(tableName) {
     return `SELECT * FROM ${tableName} WHERE jid = '${data}';`
   }
 
-  const getJudges = event_name => `CALL getJudges('"${event_name}"');`
+  const getJudges = event_name => `CALL getJudges('${event_name}');`
 
   const insertJudge = 'CALL insertJudge(:events, :jid, :name, :email, :phone, :residential_address, :commercial_address, :company, :exp, :domains, :slots, :min_projects, :referral, :password, :roles, :isPICT);'
 
