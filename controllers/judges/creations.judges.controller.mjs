@@ -1,10 +1,10 @@
-import { sendCookie, randomID } from "../../utils/index.js";
-import { groupLinks, roles } from "../../static/adminData.mjs";
+import { sendCookie, randomID, AppError } from "../../utils/index.js";
+import { groupLinks, roles, whatsappLinks } from "../../static/adminData.mjs";
 
 function creationsJudgesController(judgesServices, emailService) {
   async function insertJudge(req, res, next) {
     try {
-      const { events, ...rest } = req.body; // Destructure events from req.body
+      const { events, accessCode, ...rest } = req.body; // Destructure events from req.body
       const event_code = events == 'concepts' ? 'CO-J' : 'IM-J';
       const jid = event_code + randomID(7);
       const password = randomID(8);
@@ -13,6 +13,12 @@ function creationsJudgesController(judgesServices, emailService) {
         'concepts': 'Concepts',
         'impetus': 'Impetus'
       };
+
+      console.log(accessCode, process.env.URL_ACCESS_CODE);
+
+      if(accessCode.trim() !== process.env.URL_ACCESS_CODE){
+        throw new AppError(400, 'fail', 'URL Access Code did not match');
+      }
       
       await judgesServices.insertJudge({
         events: [events],
@@ -22,15 +28,12 @@ function creationsJudgesController(judgesServices, emailService) {
         roles: [roles[7], roles[2]],
       });
 
-      // change the events in camel case 
-
-      // await emailService.judgeRegistrationEmail({
-      //   events: [eventNames[events]],
-      //   ...rest,
-      //   jid,
-      //   password,
-      //   group_link: groupLinks.get(events),
-      // });
+      await emailService.judgeRegistrationEmail({
+        events: eventNames[events],
+        ...rest,
+        jid,
+        password,
+      });
       
       res.status(201).json({success: true});
     } catch (err) {

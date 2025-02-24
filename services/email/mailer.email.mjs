@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import { officialEmails } from '../../static/adminData.mjs';
 import { projectDomains, slotsData } from '../../static/eventsData.mjs';
 import emailTemplates from './htmlGenerators.email.mjs';
+import { writeFileSync } from 'fs';
 
 const env = process.env
 
@@ -61,25 +62,19 @@ function emailService() {
 
     async function judgeRegistrationEmail(judge) {
         try {
-            // // // console.log(judge)
-            judge.domains = judge.domains.map(domain => projectDomains[domain])
-            judge.slots = judge.slots.map(slot => slotsData[slot])
+            judge.slots = judge.slots.map(slot => slotsData[slot]).join(", ");
             const mailOptions = {
-                from: `InC\'2024 Judging <${officialEmails.get('judging')}>`,
-                to: `${judge.name} ${judge.email}`,
+                from: `InC 2025 Judging <${officialEmails.get('judging')}>`,
+                to: `${judge.name} <${judge.email}>`,
                 bcc: officialEmails.get('queries'),
                 replyTo: officialEmails.get('queries'),
-                subject: 'Registered for PICT InC 2024 Judging',
+                subject: 'Registered for PICT InC 2025 Judging',
                 priority: 'high',
                 text: 'Email content',
                 html: await emailTemplates.judgeRegistrationEmail(judge)
             }
-            return judgingEmailTransporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    throw err
-                }
-                return info
-            })
+            judgingEmailTransporter.sendMail(mailOptions).then((e) => {}).catch((e) => {throw e});
+            return "judging mail sent successfully"
         } catch (err) { throw err }
     }
 
