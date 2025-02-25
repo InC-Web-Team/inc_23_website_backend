@@ -85,8 +85,6 @@ function judgesServices(db) {
 
   async function getAllocatedProjects(jid) {
     try {
-      // // // console.log(jid)
-      console.log(judgesQueries.getAllocatedProjects(jid, eventsName[1]));
       const [conceptsResults] = await db
         .execute(judgesQueries.getAllocatedProjects(jid, eventsName[0]))
         .catch((err) => {
@@ -97,7 +95,6 @@ function judgesServices(db) {
         .catch((err) => {
           throw new AppError(400, "fail", err.sqlMessage);
         });
-      console.log(conceptsResults, impetusResults);
       return { concepts: conceptsResults, impetus: impetusResults };
     } catch (err) {
       throw err;

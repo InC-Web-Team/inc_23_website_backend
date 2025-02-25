@@ -106,13 +106,11 @@ const teamSize = new Map([
 ])
 
 const slotsData = {
-    // Slots
-    '1': 'Friday 5th April (10:00 AM - 01:00 PM)' ,
-    '2': 'Friday 5th April (02:00 PM - 05:00 PM)' ,
-    '3': 'Friday 5th April (05:00 PM - 07:00 PM)' ,
-    '4': 'Saturday 6th April (10:00 AM - 01:00 PM)' ,
-    '5': 'Saturday 6th April (02:00 PM - 05:00 PM)' ,
-    '6': 'Saturday 6th April (05:00 PM - 07:00 PM)' 
+    '1': 'Friday, 21st March (11:00 AM - 2:00 PM)',
+    '2': 'Friday, 21st March (2:00 PM - 7:00 PM)',
+    '3': 'Saturday, 22nd March (10:00 AM - 1:00 PM)',
+    '4': 'Saturday, 22nd March (1:00 PM - 4:00 PM)',
+    '5': 'Saturday, 22nd March (4:00 PM - 7:00 PM)',
 }
 
 const paymentLinks = new Map([

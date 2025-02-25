@@ -14,9 +14,9 @@ function creationsJudgesController(judgesServices, emailService) {
         'impetus': 'Impetus'
       };
 
-      console.log(accessCode, process.env.URL_ACCESS_CODE);
+      // console.log(accessCode, process.env.URL_ACCESS_CODE);
 
-      if(accessCode.trim() !== process.env.URL_ACCESS_CODE){
+      if(!accessCode || accessCode.trim() !== process.env.URL_ACCESS_CODE){
         throw new AppError(400, 'fail', 'URL Access Code did not match');
       }
       
