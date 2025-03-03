@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import { officialEmails } from '../../static/adminData.mjs';
-import { projectDomains, slotsData } from '../../static/eventsData.mjs';
+import { getJudgingSlots } from '../../static/eventsData.mjs';
 import emailTemplates from './htmlGenerators.email.mjs';
 import { writeFileSync } from 'fs';
 
@@ -62,7 +62,12 @@ function emailService() {
 
     async function judgeRegistrationEmail(judge) {
         try {
-            judge.slots = judge.slots.map(slot => slotsData[slot]).join(", ");
+            const slotsData = getJudgingSlots(judge?.events.toLowerCase());
+            judge.slots = judge.slots
+            .map(slot => parseInt(slot))
+            .sort((a, b) => a - b)
+            .map(slot => slotsData[slot])
+            .join(", ");
             const mailOptions = {
                 from: `InC 2025 Judging <${officialEmails.get('judging')}>`,
                 to: `${judge.name} <${judge.email}>`,
@@ -80,27 +85,27 @@ function emailService() {
 
     async function sendAllocationEmail(event_name, projects, judge, judgeCredentials) {
         try {
-            judge.slots = judge.slots.map(slot => slotsData[slot])
-            projects.forEach(project => {
-                project.domain = projectDomains[project.domain]
-            })
-            event_name = event_name.charAt(0).toUpperCase() + event_name.slice(1)
-            const mailOptions = {
-                from: `InC\'2024 Judging <${officialEmails.get('judging')}>`,
-                to: `${judge.name} ${judge.email}`,
-                cc: officialEmails.get('official'),
-                replyTo: officialEmails.get('judging'),
-                subject: `Updated Judging Schedule for PICT InC 2024 - ${event_name}`,
-                priority: 'high',
-                text: 'Email content',
-                html: await emailTemplates.sendAllocationEmail(event_name, projects, judge, judgeCredentials)
-            }
-            return judgingEmailTransporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    throw err
-                }
-                return info
-            })
+            // judge.slots = judge.slots.map(slot => slotsData[slot])
+            // projects.forEach(project => {
+            //     project.domain = projectDomains[project.domain]
+            // })
+            // event_name = event_name.charAt(0).toUpperCase() + event_name.slice(1)
+            // const mailOptions = {
+            //     from: `InC\'2024 Judging <${officialEmails.get('judging')}>`,
+            //     to: `${judge.name} ${judge.email}`,
+            //     cc: officialEmails.get('official'),
+            //     replyTo: officialEmails.get('judging'),
+            //     subject: `Updated Judging Schedule for PICT InC 2024 - ${event_name}`,
+            //     priority: 'high',
+            //     text: 'Email content',
+            //     html: await emailTemplates.sendAllocationEmail(event_name, projects, judge, judgeCredentials)
+            // }
+            // return judgingEmailTransporter.sendMail(mailOptions, (err, info) => {
+            //     if (err) {
+            //         throw err
+            //     }
+            //     return info
+            // })
         } catch (err) { throw err }
     }
 

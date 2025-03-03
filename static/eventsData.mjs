@@ -113,6 +113,34 @@ const slotsData = {
     '5': 'Saturday, 22nd March (4:00 PM - 7:00 PM)',
 }
 
+const getJudgingSlots = (event_name) => {
+    
+	const judgingSlotsImpetus = {
+        "1": "Friday, 21st March (11:00 AM - 2:00 PM)",
+        "2": "Friday, 21st March (2:00 PM - 5:00 PM)",
+        "3": "Friday, 21st March (5:00 PM - 7:00 PM)",
+        "4": "Saturday, 22nd March (9:00 AM - 12:00 PM)",
+        "5": "Saturday, 22nd March (1:00 PM - 3:00 PM)",
+        "6": "Saturday, 22nd March (4:00 PM - 6:00 PM)"
+    };
+    
+    const judgingSlotsConcepts = {
+        "1": "Friday, 21st March (11:00 AM - 2:00 PM)",
+        "2": "Friday, 21st March (2:00 PM - 4:00 PM)",
+        "3": "Friday, 21st March (4:00 PM - 7:00 PM)",
+        "4": "Saturday, 22nd March (10:00 AM - 1:00 PM)",
+        "5": "Saturday, 22nd March (1:00 PM - 4:00 PM)",
+        "6": "Saturday, 22nd March (4:00 PM - 7:00 PM)"
+    };
+
+	if(event_name === 'impetus'){
+		return judgingSlotsImpetus;
+	}
+	else if(event_name === 'concepts'){
+		return judgingSlotsConcepts;
+	}
+}
+
 const paymentLinks = new Map([
     ['test', 'https://easebuzz.in/quickpay/owhseppfut'],
     ['concepts', 'https://easebuzz.in/quickpay/pkwfmmpssi'],
@@ -127,4 +155,6 @@ export {
     teamSize,
     slotsData,
     paymentLinks,
+    getJudgingSlots,
+
 }
