@@ -304,18 +304,25 @@ function createRegistrationsController(
 
   async function getAllTeamLeaders(req, res, next){
     try {
-      const event_name = 'impetus';
+      const event_name = 'concepts';
+      // const results = await eventsServices.getTicketDetails('INC-Cc7fa16c071fb');
+
       console.log('starting job to send mails');
+      
+      console.log(results);
+
       const whatsapp_url = whatsappLinks.get(event_name);
       const formattedEventName = event_name[0].toUpperCase() + event_name.slice(1);
-      const formattedEmail = 'chinmay.22320116@viit.ac.in,pranali.22320010@viit.ac.in';
+      let formattedEmail = 'Hemangi Jadhav <hemangi.jadhav2003@gmail.com>,Mayuri Avhad <mavhad06@gmail.com>,Jayesh Kotkar <jayeshkotkar20@gmail.com>,Linashree Gudaghe <linashreegudaghe5@gmail.com>';
+
       // await emailService.eventRegistrationEmail(formattedEventName, {
+      //   ...results,
       //   email: formattedEmail,
       //   whatsapp_url,
-      //   pid: 'IM-OT0008',
       // });
+
       console.log('sent all mails successfully');
-      res.json('mails sent successfully');
+      return res.json('mails sent successfully');
     } catch (error) {
       next(error);
     }

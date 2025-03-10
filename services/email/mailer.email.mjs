@@ -35,12 +35,14 @@ function emailService() {
 
     async function eventRegistrationEmail(event_name, data) {
         try {
+
             const dynamicData = {
-                event_name,
-                team_id: data.pid,
-                tentative_dates: "21st - 23rd March",
-                whatsapp_url: data.whatsapp_url,
+                    event_name,
+                    team_id: data.pid,
+                    tentative_dates: "21st - 23rd March",
+                    whatsapp_url: data.whatsapp_url,
             }
+
             const mailOptions = {
                 from: `InC 2025 <${officialEmails.get('queries')}>`,
                 to: data.email,
@@ -51,9 +53,75 @@ function emailService() {
                 text: 'Email content',
                 html: await emailTemplates.eventRegistrationEmail(dynamicData),
             };
-            
-            eventEmailTransporter.sendMail(mailOptions).then((e) => {}).catch((e) => {throw e});
+
+            eventEmailTransporter.sendMail(mailOptions).then((e) => {console.log(`mail sent - ${data.pid}`);}).catch((e) => {throw e});
+
             return "Emails sent successfully";
+
+            // await Promise.allSettled(allEmailPromises);
+            // console.log("✅ Bulk email process completed.", counter);
+
+            // const emailData = data.email;
+            // console.log('no of emails', emailData.length)
+            // let counter = 0;
+
+            // const allEmailPromises = [];
+
+            // for (const entry of emailData) {
+            // 		const { pid, emails } = entry;
+
+            // 		const mailOptions = {
+            // 			from: `InC 2025 <${officialEmails.get('queries')}>`,
+            // 			to: emails,
+            // 			bcc: `${officialEmails.get('queries')}`,
+            // 			replyTo: officialEmails.get('queries'),
+            // 			subject: `🌟 Register Now! Special Prize by PICT Awaits You! 🚀`,
+            // 			priority: 'high',
+            // 			text: 'You are invited to participate in the INC and Project Competition by PICT!',
+            // 			html: `
+            // 			<html>
+            // 					<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            // 							<p style="font-size: 18px;">📢 <strong>Calling All Innovators & Creators to Win the Special Prize by PICT!</strong></p>
+                                        
+            // 							<p>Do you have a groundbreaking idea? Are you ready to showcase your skills and compete with the best? 🌟</p>
+
+            // 							<p><strong>Grab the opportunity to win the special prize by PICT!</strong></p>
+
+            // 							<h3 style="color: #ff6600;">🔥 Join our flagship event INC and Project Competition! 🔥</h3>
+            // 							<ul>
+            // 									<li>✅ <strong>Exciting Prizes & Certificates</strong>, including a special prize by PICT 🎖</li>
+            // 									<li>✅ <strong>A Platform to Shine</strong> 🌟</li>
+            // 									<li>✅ <strong>Network with Experts & Like-minded Innovators</strong></li>
+            // 							</ul>
+
+            // 							<p><strong>📅 Register Now! Don’t miss this golden opportunity to turn your ideas into reality.</strong></p>
+
+            // 							<p>
+            // 									🔗 <a href="https://docs.google.com/forms/d/e/1FAIpQLScTRyFsd_eb8zQImGmnudK3JK93931Fu59xygU3gFg6H8-Kbg/viewform?usp=sharing" 
+            // 									style="color: #ff6600; text-decoration: none; font-weight: bold;">Register Here</a>
+            // 							</p>
+
+            // 							<p><strong>🔹 Only the Team Leader should fill out the form.</strong></p>
+            // 							<p><strong>🔹 Ignore if already filled.</strong></p>
+
+            // 							<p>Tag your friends & spread the word! 📢</p>
+
+            // 							<p style="color: #ff6600;"><strong>#Innovation #PICT_INC</strong></p>
+
+            // 							<p>Best Regards,</p>
+            // 							<p><strong>PICT INC Team</strong></p>
+            // 					</body>
+            // 			</html>
+            // 			`,
+            // 		};
+
+            // 		allEmailPromises.push(
+            // 				eventEmailTransporter.sendMail(mailOptions)
+            // 						.then(() => {console.log(`✅ Email sent to ${emails} (PID: ${pid})`); counter++;})
+            // 						.catch(err => console.error(`❌ Failed to send to ${emails} (PID: ${pid}):`, err.message))
+            // 		);
+            // }
+
         } catch (err) {
             throw err;
         }

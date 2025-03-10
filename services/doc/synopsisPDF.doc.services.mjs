@@ -55,7 +55,7 @@ function createSynopsis(projects, event_name) {
               alignment: "left",
             },
             {
-              text: `${event_name} Synopsis: InC 2024`,
+              text: `${event_name} Synopsis: InC 2025`,
               fontSize: 10,
               italics: "true",
               alignment: "right",

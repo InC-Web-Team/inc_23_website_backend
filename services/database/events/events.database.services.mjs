@@ -178,13 +178,8 @@ function eventsServices(db) {
 
   async function getAllTeamLeaders(){
     try {
-      const [results] = await db.execute('SELECT ticket, step_2 FROM inc_2025.tickets WHERE is_deleted = 0').catch((err) => console.log(err));
-      const leaders = results.map(result => {
-        if(Array.isArray(result.step_2) && result?.step_2[0]?.email){
-          return {ticket: result.ticket, email: result.step_2[0].email};
-        }
-      })
-      return leaders;
+      const [results] = await db.execute('SELECT pid, GROUP_CONCAT(email) as emails FROM inc_2025.concepts_registrations GROUP BY pid;').catch((err) => console.log(err));
+      return results;
     } catch (error) {
       throw error;
     }
