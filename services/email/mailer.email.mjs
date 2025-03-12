@@ -146,7 +146,7 @@ function emailService() {
                 text: 'Email content',
                 html: await emailTemplates.judgeRegistrationEmail(judge)
             }
-            judgingEmailTransporter.sendMail(mailOptions).then((e) => {}).catch((e) => {throw e});
+            judgingEmailTransporter.sendMail(mailOptions).then((e) => {console.log('judge mail sent')}).catch((e) => {throw e});
             return "judging mail sent successfully"
         } catch (err) { throw err }
     }
