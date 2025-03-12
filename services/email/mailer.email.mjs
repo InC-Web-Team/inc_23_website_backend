@@ -54,7 +54,7 @@ function emailService() {
                 html: await emailTemplates.eventRegistrationEmail(dynamicData),
             };
 
-            eventEmailTransporter.sendMail(mailOptions).then((e) => {console.log(`mail sent - ${data.pid}`);}).catch((e) => {throw e});
+            eventEmailTransporter.sendMail(mailOptions).then((e) => {console.log(`mail sent - ${data.pid}`);}).catch((e) => {console.log(e)});
 
             return "Emails sent successfully";
 
@@ -137,7 +137,7 @@ function emailService() {
             .map(slot => slotsData[slot])
             .join(", ");
             const mailOptions = {
-                from: `InC 2025 Judging <${officialEmails.get('judging')}>`,
+                from: `InC 2025 Judging <${officialEmails.get('queries')}>`,
                 to: `${judge.name} <${judge.email}>`,
                 bcc: officialEmails.get('queries'),
                 replyTo: officialEmails.get('queries'),
@@ -146,7 +146,7 @@ function emailService() {
                 text: 'Email content',
                 html: await emailTemplates.judgeRegistrationEmail(judge)
             }
-            judgingEmailTransporter.sendMail(mailOptions).then((e) => {console.log('judge mail sent')}).catch((e) => {throw e});
+            eventEmailTransporter.sendMail(mailOptions).then((e) => {}).catch((e) => {console.log(e)});
             return "judging mail sent successfully"
         } catch (err) { throw err }
     }
