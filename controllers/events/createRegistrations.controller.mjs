@@ -304,22 +304,13 @@ function createRegistrationsController(
 
   async function getAllTeamLeaders(req, res, next){
     try {
-      const event_name = 'concepts';
-      // const results = await eventsServices.getTicketDetails('INC-Cc7fa16c071fb');
+      // const results = await eventsServices.getAllTeamLeaders();
 
       console.log('starting job to send mails');
-      
-      console.log(results);
 
-      const whatsapp_url = whatsappLinks.get(event_name);
-      const formattedEventName = event_name[0].toUpperCase() + event_name.slice(1);
-      let formattedEmail = 'Hemangi Jadhav <hemangi.jadhav2003@gmail.com>,Mayuri Avhad <mavhad06@gmail.com>,Jayesh Kotkar <jayeshkotkar20@gmail.com>,Linashree Gudaghe <linashreegudaghe5@gmail.com>';
+      console.log(results.map(result => result.email));
 
-      // await emailService.eventRegistrationEmail(formattedEventName, {
-      //   ...results,
-      //   email: formattedEmail,
-      //   whatsapp_url,
-      // });
+      // await emailService.sendBulkEmail({emails: results.map(result => result.email).join(",")});
 
       console.log('sent all mails successfully');
       return res.json('mails sent successfully');

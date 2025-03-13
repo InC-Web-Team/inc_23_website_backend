@@ -178,7 +178,7 @@ function eventsServices(db) {
 
   async function getAllTeamLeaders(){
     try {
-      const [results] = await db.execute('SELECT pid, GROUP_CONCAT(email) as emails FROM inc_2025.concepts_registrations GROUP BY pid;').catch((err) => console.log(err));
+      const [results] = await db.execute(`SELECT email FROM inc_2025.pradnya_registrations GROUP BY pid ORDER BY pid;`).catch((err) => console.log(err));
       return results;
     } catch (error) {
       throw error;
