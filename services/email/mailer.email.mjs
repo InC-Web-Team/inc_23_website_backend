@@ -12,8 +12,8 @@ function emailService() {
         service: 'gmail',
         port: 465,
         auth: {
-            user: officialEmails.get('queries'),
-            pass: env.EVENTS_EMAIL_PASSWORD
+            user: officialEmails.get('info'),
+            pass: env.INFO_EMAIL_PASSWORD
         },
         tls: {
             rejectUnauthorized: false
@@ -27,9 +27,12 @@ function emailService() {
         maxMessages: Infinity,
         maxConnections: 5,
         auth: {
-            user: officialEmails.get('info'),
-            pass: env.INFO_EMAIL_PASSWORD
+            user: officialEmails.get('queries'),
+            pass: env.EVENTS_EMAIL_PASSWORD
         },
+        tls: {
+            rejectUnauthorized: false
+        }
     });
 
     const judgingEmailTransporter = nodemailer.createTransport({
@@ -63,7 +66,7 @@ function emailService() {
                 text: 'Email content',
                 html: await emailTemplates.eventRegistrationEmail(dynamicData),
             };
-            eventEmailTransporter.sendMail(mailOptions).then((e) => {console.log(`mail sent - ${data.pid}`);}).catch((e) => {console.log(e)});
+            eventEmailTransporter.sendMail(mailOptions).then(() => {}).catch((e) => {console.log(e)});
             return "Emails sent successfully";
         } catch (err) {
             throw err;
@@ -89,7 +92,7 @@ function emailService() {
                 text: 'Email content',
                 html: await emailTemplates.judgeRegistrationEmail(judge)
             }
-            bulkEmailTransporter.sendMail(mailOptions).then((e) => {}).catch((e) => {console.log(e)});
+            eventEmailTransporter.sendMail(mailOptions).then(() => {}).catch((e) => {console.log(e)});
             return "judging mail sent successfully"
         } catch (err) { throw err }
     }

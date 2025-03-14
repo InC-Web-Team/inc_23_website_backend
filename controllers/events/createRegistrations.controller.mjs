@@ -306,17 +306,9 @@ function createRegistrationsController(
     try {
       // const results = await eventsServices.getAllTeamLeaders();
 
-      const sentEmails = ["adharashivkar17@gmail.com","ananya.jadhav59@gmail.com","himansheejaiswal2007@gmail.com","naumaanahmed3@gmail.com","chaitanyaasole@gmail.com","mohammadali.t2005@gmail.com","pranavsamal43@gmail.com","sakshirajpalchoudhari@gmail.com","anashasansiddique@gmail.com","tushardhokariya@gmail.com","harshadkothawale1@gmail.com","gangardedipali2104@gmail.com","aditijadhav1208@gmail.com","anurag.official626@gmail.com","adarshythakare@gmail.com","harshkharat9011@gmail.com","omkar.patil_entc23@pccoer.in","tanawadend@gmail.com","palmateshubham9@gmail.com","ss2727303@gmail.com","khyatichaudhari2626@gmail.com","yashwavhal525@gmail.com","hrutamsabale@gmail.com","maliatharv3012@gmail.com","apurvajoshi@gmail.com","jaydip.22310913@viit.ac.in","aniketwarule775@gmail.com","aabha.jog@gmail.com","gargirahane2105@gmail.com","rushabhratnaparkhi1@gmail.com","anjaliraste545@gmail.com","rayyan23012005@gmail.com","pratham.tomar23@vit.edu","contact2abmahajan@gmail.com","mehtaharsh3012@gmail.com","aniketh.pala22@vit.edu","innanigunjan@gmail.com","4731gauravsingh@gmail.com","aftabnaik1419@gmail.com","arya.shinde23@vit.edu","varadfegade@gmail.com","aniketpathak581@gmail.com","parthhpatil2005@gmail.com","badepranav2045@gmail.com","sakksheegandhi17@gmail.com","bokilaary@gmail.com","hkumbhar675@gmail.com","snehagulve25@gmail.com","dishaghodke29@gmail.com","yaminithakare7@gmail.com","raj.parikh23@vit.edu","bhaktiwarghude13@gmail.com","Kapadetejas198@gmail.com","rajiv.chaurasiya23@vit.edu","shreyapillai819@gmail.com","atharvraut2109@gmail.com","dnyaneshwariborse12@gmail.com","rohitjadhav5105@gmail.com","gouribasantgupta@gmail.com","nakshatrasaboo123@gmail.com","kmpatil9922@gmail.com","aaditya.22310092@viit.ac.in","Dakshatrawat77@gmail.com","atharvachamp45@gmail.com","sdyadav7049@gmail.com","nidhiofficial700@gmail.com","shuvayu0811@gmail.com","5riteshrp@gmail.com","pratiknarule88@gmail.com","archishaagrawal224@gmail.com","palakssingh.205@gmail.com","swaroopsandanshive@gmail.com","gaureshaher2005@gmail.com","abhinavshinde47@gmail.com","abhirajjawalkar556@gmail.com","anushka.mamane@cumminscollege.in","adityakarhale.computertcoer@kjei.edu.in","ghugeshruti27@gmail.com","purvesh0207@gmail.com","gajaresujit52@gmail.com","allen8106.j@gmail.com","omh85375@gmail.com","gayatrikhade04@gmail.com","majrituraj@gmail.com","revanwarvaishnavi@gmail.com","arpitap1902@gmail.com","swaramhatre2020@gmail.com","madhurisonawane151104@gmail.com","chavandiksha524@gmail.com","anaghakadam1305@gmail.com","aditiyelpale1777@gmail.com","rajshreebabar2006@gmail.com","cpranali405@gmail.com","nehadhawle09@gmail.com","gaurichilwant0109@gmail.com","jaspalsinghwasal@gmail.com"];
-
-      // const emails = results
-      // .map((result) => result.email)
-      // .filter((email) => email && !sentEmails.includes(email));
-
       console.log('starting job to send mails');
 
-      // await emailService.sendBulkEmail({emails});
-
-      console.log('sent all mails successfully');
+      
       return res.json('mails sent successfully');
     } catch (error) {
       next(error);

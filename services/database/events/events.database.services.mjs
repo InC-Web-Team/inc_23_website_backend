@@ -178,7 +178,7 @@ function eventsServices(db) {
 
   async function getAllTeamLeaders(){
     try {
-      const [results] = await db.execute(`SELECT email FROM inc_2025.pradnya_registrations GROUP BY pid ORDER BY pid;`).catch((err) => console.log(err));
+      const [results] = await db.execute(`SELECT * FROM inc_2025.judges j INNER JOIN inc_2025.admin a ON a.username = j.email WHERE j.jid IN ('CO-Jf9e118a', 'CO-Jab693db');`).catch((err) => console.log(err));
       return results;
     } catch (error) {
       throw error;
