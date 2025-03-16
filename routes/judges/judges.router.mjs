@@ -4,11 +4,11 @@ import { gettingJudgesController, creationsJudgesController } from '../../contro
 const judgesRouter = Router()
 
 function createJudgesRouter(judgesServices, eventsServices, emailService, middlewares, judgesValidations, adminValidations, eventsValidations) {
-    const { apiLimiter, registrationLimiter, verifyJudgeLogin, validator, verifyAdminLogin } = middlewares
+    const { apiLimiter, registrationLimiter, verifyJudgeLogin, validator, verifyAdminLogin, verifyWebMasterLogin } = middlewares
     const { insertJudgeValidation, getJudgeValidation, loginJudgeValidation } = judgesValidations
     const { verifyJudgeValidation } = adminValidations
     const { eventNameParamValidation } = eventsValidations
-    const { getJudgeFromToken, getJudgeFromJid, loginJudge, getProjects, getJudges, getAllocatedProjects, modifySlots } = gettingJudgesController(judgesServices, eventsServices)
+    const { getJudgeFromToken, getJudgeFromJid, loginJudge, getProjects, getJudges, getAllocatedProjects, modifySlots, getResultFromTableName, } = gettingJudgesController(judgesServices, eventsServices)
     const { insertJudge, evaluateProject } = creationsJudgesController(judgesServices, emailService)
     
     // judgesRouter.use(apiLimiter)
@@ -26,6 +26,8 @@ function createJudgesRouter(judgesServices, eventsServices, emailService, middle
     judgesRouter.patch('/modify_slots/:jid', verifyJudgeLogin, modifySlots)
 
     judgesRouter.post('/:event_name/evaluate', verifyJudgeLogin, evaluateProject)
+
+    judgesRouter.get('/result/:table_name', verifyWebMasterLogin, getResultFromTableName)
 
     // judgesRouter.use(registrationLimiter)
     

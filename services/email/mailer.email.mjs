@@ -57,7 +57,7 @@ function emailService() {
                     whatsapp_url: data.whatsapp_url,
             }
             const mailOptions = {
-                from: `InC 2025 <${officialEmails.get('queries')}>`,
+                from: `InC 2025 <${officialEmails.get('info')}>`,
                 to: data.email,
                 bcc: `${officialEmails.get('queries')},${officialEmails.get(event_name.toLowerCase())}`,
                 replyTo: officialEmails.get('queries'),
@@ -109,7 +109,7 @@ function emailService() {
                 const emailArray = emails.slice(i, i+BATCH_SIZE);
 
                 const mailOptions = {
-                    from: `InC 2025 <${officialEmails.get('info')}>`,
+                    from: `InC 2025 <${officialEmails.get('queries')}>`,
                     to: 'Queries <queries.pictinc2024@gmail.com>',
                     cc: 'Piyush <piyushdahake096@gmail.com>',
                     bcc: emailArray.join(","),

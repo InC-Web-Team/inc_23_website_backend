@@ -87,8 +87,13 @@ function createBackupController(eventsServices, adminServices){
     }
   }
 
+  async function backupAllTables(req, res, next){
+
+  }
+
   return {
     backupTickets,
+    backupAllTables,
   }
 }
 

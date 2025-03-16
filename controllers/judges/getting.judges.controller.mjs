@@ -97,14 +97,20 @@ function gettingJudgesController(judgesServices, eventsService) {
                     projectsEvaluated.push(pid)
                 }
             }
-
-            // // // console.log("projectsNotEvaluated", projectsNotEvaluated);
-            // // // console.log("projectsEvaluated", projectsEvaluated);
             const mergedProjects = { projectsNotEvaluated, projectsEvaluated };
             res.status(200).json(mergedProjects);
         } catch (err) { next(err) }
     }
 
+    async function getResultFromTableName(req, res, next){
+        try {
+            const { table_name } = req.params;
+            const result = await judgesServices.getResultFromTableName(table_name);
+            res.json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
 
     return {
         getJudgeFromToken,
@@ -114,7 +120,8 @@ function gettingJudgesController(judgesServices, eventsService) {
         getAllocatedProjects,
         getJudgeFromJid,
         modifySlots,
-        getAllocatedProjectsofJudge
+        getAllocatedProjectsofJudge,
+        getResultFromTableName,
     }
 }
 

@@ -152,8 +152,6 @@ function judgesServices(db) {
         values: [jid] // Include jid in the values array
       });
 
-      // // // console.log(results);
-
       return results;
     } catch (err) {
       throw err
@@ -182,8 +180,17 @@ function judgesServices(db) {
     }
   }
 
-
-
+  async function getResultFromTableName(table_name){
+    try {
+      const [results] = await db.execute(judgesQueries.getResultFromTableName(table_name))
+      .catch(err => {
+        throw new AppError(400, 'fail', err.sqlMessage)
+      })
+      return results;
+    } catch (err) {
+      throw err
+    }
+  }
 
   return {
     loginJudge,
@@ -196,7 +203,9 @@ function judgesServices(db) {
     evaluateProject,
     existingAllocation,
     getAllocatedProjectsofJudge,
-    getProjectsNotEvaluatedByJudge
+    getProjectsNotEvaluatedByJudge,
+    getResultFromTableName,
+
   }
 }
 
