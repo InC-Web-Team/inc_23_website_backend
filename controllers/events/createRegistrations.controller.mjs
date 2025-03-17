@@ -307,7 +307,6 @@ function createRegistrationsController(
       // const results = await eventsServices.getAllTeamLeaders();
 
       console.log('starting job to send mails');
-
       
       return res.json('mails sent successfully');
     } catch (error) {

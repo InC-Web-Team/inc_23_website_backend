@@ -779,6 +779,20 @@ function eventsServices(db) {
     }
   }
 
+  async function getProjectsByTeamIds(event_name, team_ids) {
+    try {
+      const [results] = await db
+        .execute(eventsQueries.getProjectsByTeamIds(event_name, team_ids))
+        .catch((err) => {
+          console.log(err);
+          throw new AppError(400, "fail", err.sqlMessage);
+        });
+      return results;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async function getProject(event_name, pid) {
     try {
       pid = pid.map(id => `'${id}'`).join(",")
@@ -801,14 +815,11 @@ function eventsServices(db) {
           data
         )
         .catch((err) => {
-          // // // console.log(err);
-
           throw new AppError(400, "fail", err.sqlMessage);
         });
 
       return results[0];
     } catch (err) {
-      // // // console.log(err);
       throw err;
     }
   }
@@ -1183,7 +1194,8 @@ function eventsServices(db) {
     getAllTicketsForBackup,
     checkPaymentIdExist,
     getIncompleteRegistrations,
-    
+    getProjectsByTeamIds,
+
   };
 }
 

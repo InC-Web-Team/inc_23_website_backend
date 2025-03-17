@@ -41,9 +41,16 @@ function eventsQueries(tableName) {
 
     // const getProjects = (data) => `SELECT title, ${data}_projects.pid ,  abstract , domain, mode FROM ${data}_projects INNER JOIN ${data}_group_info ON ${data}_projects.pid = ${data}_group_info.pid;`
 
-    const getProjects = (data) => `SELECT title, ${data}_projects.pid ,  abstract , domain, mode 
-    FROM ${data}_projects 
-    INNER JOIN ${data}_group_info ON ${data}_projects.pid = ${data}_group_info.pid;`
+    const getProjects = (data) => `SELECT title, ${data}_projects.pid ,  abstract , domain, mode FROM ${data}_projects INNER JOIN ${data}_group_info ON ${data}_projects.pid = ${data}_group_info.pid WHERE ${data}_projects.pid NOT IN (
+    'CO-ML1215', 'CO-ML1234', 'CO-ML1236', 'CO-ML1239', 'CO-ML1240',
+    'CO-ML1243', 'CO-ML1247', 'CO-ML1253', 'CO-ML1255', 'CO-ML1258',
+    'CO-ML1259', 'CO-ML1272', 'CO-OT0065', 'CO-OT0067', 'CO-OT1125',
+    'CO-OT0069', 'CO-OT0119', 'CO-AD0047', 'CO-AD0045', 'CO-AD0056',
+    'CO-OT0122', 'CO-OT0078', 'CO-OT0080', 'CO-OT0085', 'CO-OT0086',
+    'CO-AD0067'
+    );`
+
+    const getProjectsByTeamIds = (data, team_ids) => `SELECT title, ${data}_projects.pid ,  abstract , domain, mode FROM ${data}_projects INNER JOIN ${data}_group_info ON ${data}_projects.pid = ${data}_group_info.pid WHERE ${data}_projects.pid IN (${team_ids});`
 
     const getProject = ({ event_name, pid }) => `SELECT title, ${event_name}_projects.pid ,  abstract , domain, mode FROM ${event_name}_projects INNER JOIN ${event_name}_group_info ON ${event_name}_projects.pid = ${event_name}_group_info.pid WHERE ${event_name}_projects.pid IN (${pid});`
 
@@ -91,7 +98,8 @@ function eventsQueries(tableName) {
         getTechfiestaMembers,
         getAllTicketsCountForBackup,
         getAllTicketsForBackup,
-        
+        getProjectsByTeamIds,
+
     }
 }
 

@@ -241,8 +241,18 @@ function getRegistrationsController(
   async function getSynopsis(req, res, next) {
     try {
       let event_name = req.params.event_name;
-      const projects = await eventsServices.getProjects(event_name);
+      let team_ids = req.query.team_ids;
+      let projects = [];
       let results = {};
+
+      if(team_ids && team_ids !== 'null'){
+        team_ids = team_ids.split(',').map(team_id => (`'${team_id.trim()}'`)).join(', ');
+        projects = await eventsServices.getProjectsByTeamIds(event_name, team_ids);
+      }
+      else{
+        projects = await eventsServices.getProjects(event_name);
+      }
+      
       Object.entries(projectDomains).forEach(domain => {
         results[domain[1]] = projects.filter(
           (project) => project.domain === domain[0]
@@ -250,7 +260,6 @@ function getRegistrationsController(
       })
       event_name = capitalizeFirstLetter(event_name);
       const pdfDoc = docServices.synopsisPDF(results, event_name);
-
       docServices.sendPDF(res, "synopsis", pdfDoc);
     } catch (err) {
       next(err);
