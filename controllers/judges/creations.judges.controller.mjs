@@ -1,10 +1,10 @@
-import { sendCookie, randomID } from "../../utils/index.js";
-import { groupLinks, roles } from "../../static/adminData.mjs";
+import { sendCookie, randomID, AppError } from "../../utils/index.js";
+import { groupLinks, roles, whatsappLinks } from "../../static/adminData.mjs";
 
 function creationsJudgesController(judgesServices, emailService) {
   async function insertJudge(req, res, next) {
     try {
-      const { events, ...rest } = req.body; // Destructure events from req.body
+      const { events, accessCode, ...rest } = req.body; // Destructure events from req.body
       const event_code = events == 'concepts' ? 'CO-J' : 'IM-J';
       const jid = event_code + randomID(7);
       const password = randomID(8);
@@ -14,24 +14,28 @@ function creationsJudgesController(judgesServices, emailService) {
         'impetus': 'Impetus'
       };
 
+      // console.log(accessCode, process.env.URL_ACCESS_CODE);
+
+      if(!accessCode || accessCode.trim() !== process.env.URL_ACCESS_CODE){
+        throw new AppError(400, 'fail', 'URL Access Code did not match');
+      }
+      
       await judgesServices.insertJudge({
         events: [events],
-        ...rest, // Spread the rest of the properties
+        ...rest,
         jid,
         password,
-        roles: [roles[6]],
+        roles: [roles[7], roles[2]],
       });
-
-      // change the events in camel case 
 
       await emailService.judgeRegistrationEmail({
-        events: [eventNames[events]],
-        ...rest, // Spread the rest of the properties
+        events: eventNames[events],
+        ...rest,
         jid,
         password,
-        group_link: groupLinks.get(events),
       });
-      res.status(201).end();
+      
+      res.status(201).json({success: true});
     } catch (err) {
       next(err);
     }
@@ -41,16 +45,15 @@ function creationsJudgesController(judgesServices, emailService) {
   async function evaluateProject(req, res, next) {
     try {
       const { event_name } = req.params;
-      // // console.log(event_name)
       const { pid, jid } = req.body;
       const isExist = await judgesServices.existingAllocation(pid, jid, event_name);
-      // // // console.log(isExist)
       if (isExist['COUNT(*)'] >= 1) {
-        // // // console.log("Existing allocation")
-        res.status(401).end();
+        res.status(401).json({message: 'Existing Allocation'}).end();
       }
-      await judgesServices.evaluateProject(event_name, req.body);
-      res.status(201).end();
+      else {
+        await judgesServices.evaluateProject(event_name, req.body);
+        res.status(201).end();
+      }
     } catch (err) {
       next(err);
     }

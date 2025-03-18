@@ -6,7 +6,7 @@ function judgesQueries(tableName) {
     return `SELECT * FROM ${tableName} WHERE jid = '${data}';`
   }
 
-  const getJudges = event_name => `CALL getJudges('"${event_name}"');`
+  const getJudges = event_name => `CALL getJudges('${event_name}');`
 
   const insertJudge = 'CALL insertJudge(:events, :jid, :name, :email, :phone, :residential_address, :commercial_address, :company, :exp, :domains, :slots, :min_projects, :referral, :password, :roles, :isPICT);'
 
@@ -30,6 +30,8 @@ function judgesQueries(tableName) {
   const existingAllocation = (pid, jid) => `SELECT COUNT(*) FROM allocations WHERE pid = '${pid}' AND jid = '${jid}';`
   const existingEvaluation = (pid, jid, event_name) => `SELECT COUNT(*) FROM ${event_name}_evaluation  WHERE pid = '${pid}' AND jid = '${jid}';`
 
+  const getResultFromTableName = (table_name) => `SELECT * FROM ${table_name};`;
+
   return {
     getJudge,
     getJudges,
@@ -41,7 +43,9 @@ function judgesQueries(tableName) {
     insertConceptsEvaluation,
     insertImpetusEvaluation,
     existingAllocation,
-    existingEvaluation
+    existingEvaluation,
+    getResultFromTableName,
+    
   }
 }
 

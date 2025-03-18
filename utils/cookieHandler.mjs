@@ -1,10 +1,10 @@
 const options = {
     httpOnly: true,
-    maxAge: process.env.TOKEN_EXPIRY,
+    maxAge: process.env.TOKEN_EXPIRY || 3600000,
     path: '/',
     secure: true,
     signed: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict'
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict',
 }
 
 function sendCookie(res, cookies, path) {
@@ -15,7 +15,7 @@ function sendCookie(res, cookies, path) {
 }
 
 function clearCookie(res, key, path) {
-    res.clearCookie(key, { ...options, path })
+    res.cookie(key, "", { ...options, maxAge: 0, expires: new Date(0), path })
     return res
 }
 

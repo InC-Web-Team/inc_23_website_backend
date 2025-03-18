@@ -15,16 +15,13 @@ function eventsQueries(tableName) {
     }
 
     const completeRegistration = (event_name, no_of_members) => {
-        // // // console.log(event_name)
         let placeholders = ''
         if (event_name === 'pradnya') {
             for (let i = 0; i < no_of_members; i++) placeholders += ', ?, ?, ?, ?, ?'
         } else {
-            // // // console.log("Hello")
             for (let i = 0; i < no_of_members; i++) placeholders += ', ?, ?, ?, ?'
         }
-        // // // console.log(placeholders);
-        // // console.log(process.env[`INSERT_${event_name.toUpperCase()}_${no_of_members}`] + placeholders + ');')
+        // console.log(process.env[`INSERT_${event_name.toUpperCase()}_${no_of_members}`] + placeholders + ');')
         return process.env[`INSERT_${event_name.toUpperCase()}_${no_of_members}`] + placeholders + ');'
     }
 
@@ -44,21 +41,16 @@ function eventsQueries(tableName) {
 
     // const getProjects = (data) => `SELECT title, ${data}_projects.pid ,  abstract , domain, mode FROM ${data}_projects INNER JOIN ${data}_group_info ON ${data}_projects.pid = ${data}_group_info.pid;`
 
-    const getProjects = (data) => `SELECT title, ${data}_projects.pid ,  abstract , domain, mode 
-    FROM ${data}_projects 
-    INNER JOIN ${data}_group_info ON ${data}_projects.pid = ${data}_group_info.pid 
-    WHERE ${data}_projects.pid NOT IN (
-        'CO-DS1011', 'CO-ML1100', 'CO-ML1115', 'CO-CN1017', 'CO-CN1014',
-        'CO-ML1015', 'CO-ML1066', 'CO-ML0001', 'CO-ML1088', 'CO-OT0020',
-        'CO-ML1048', 'CO-OT1053', 'CO-AD0012', 'CO-CN1012', 'CO-OT0027',
-        'CO-AD1022', 'CO-ML1058', 'CO-DS1003', 'CO-AD1032', 'CO-OT0025',
-        'CO-CN1008', 'CO-DS1024', 'CO-OT0017', 'CO-ML1073', 'CO-ML0002',
-        'CO-CN0003', 'CO-DS1026', 'CO-AD0007', 'CO-ML1033', 'CO-ML1116',
-        'CO-OT0040', 'CO-OT1056', 'CO-AD0010', 'CO-DS1014',
-        'CO-CN0004', 'CO-OT1043', 'CO-AD0028', 'CO-AD1011',
-        'CO-CN1009', 'CO-AD0004', 'CO-DS1016', 'CO-CN1013',
-        'CO-DS0033', 'CO-OT1039', 'CO-AD0020', 'CO-ML1118'
+    const getProjects = (data) => `SELECT title, ${data}_projects.pid ,  abstract , domain, mode FROM ${data}_projects INNER JOIN ${data}_group_info ON ${data}_projects.pid = ${data}_group_info.pid WHERE ${data}_projects.pid NOT IN (
+    'CO-ML1215', 'CO-ML1234', 'CO-ML1236', 'CO-ML1239', 'CO-ML1240',
+    'CO-ML1243', 'CO-ML1247', 'CO-ML1253', 'CO-ML1255', 'CO-ML1258',
+    'CO-ML1259', 'CO-ML1272', 'CO-OT0065', 'CO-OT0067', 'CO-OT1125',
+    'CO-OT0069', 'CO-OT0119', 'CO-AD0047', 'CO-AD0045', 'CO-AD0056',
+    'CO-OT0122', 'CO-OT0078', 'CO-OT0080', 'CO-OT0085', 'CO-OT0086',
+    'CO-AD0067'
     );`
+
+    const getProjectsByTeamIds = (data, team_ids) => `SELECT title, ${data}_projects.pid ,  abstract , domain, mode FROM ${data}_projects INNER JOIN ${data}_group_info ON ${data}_projects.pid = ${data}_group_info.pid WHERE ${data}_projects.pid IN (${team_ids});`
 
     const getProject = ({ event_name, pid }) => `SELECT title, ${event_name}_projects.pid ,  abstract , domain, mode FROM ${event_name}_projects INNER JOIN ${event_name}_group_info ON ${event_name}_projects.pid = ${event_name}_group_info.pid WHERE ${event_name}_projects.pid IN (${pid});`
 
@@ -83,6 +75,13 @@ function eventsQueries(tableName) {
         return `CALL getTechfiestaMembers(?)`;
     }
 
+    const getAllTicketsCountForBackup = () => {
+        return 'SELECT COUNT(*) AS total FROM tickets WHERE date > ?';
+    }
+
+    const getAllTicketsForBackup = () => {
+        return 'SELECT * FROM tickets WHERE date > ? ORDER BY date LIMIT ? OFFSET ?';
+    }
 
     return {
         checkUserRegistration,
@@ -97,6 +96,9 @@ function eventsQueries(tableName) {
         updateProject,
         getBackups,
         getTechfiestaMembers,
+        getAllTicketsCountForBackup,
+        getAllTicketsForBackup,
+        getProjectsByTeamIds,
 
     }
 }

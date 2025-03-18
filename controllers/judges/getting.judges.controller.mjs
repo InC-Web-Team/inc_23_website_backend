@@ -14,7 +14,7 @@ function gettingJudgesController(judgesServices, eventsService) {
         try {
             const { event_name } = req.params
             const judges = await judgesServices.getJudges(event_name)
-            res.status(302).json(judges)
+            res.status(200).json(judges)
         } catch (err) { next(err) }
     }
 
@@ -62,9 +62,8 @@ function gettingJudgesController(judgesServices, eventsService) {
     async function getJudgeFromJid(req, res, next) {
         try {
             const { jid } = req.params
-            // // // console.log(jid)
             const judge = await judgesServices.getJudge(jid )
-            res.status(302).json(judge)
+            res.status(200).json(judge)
         } catch (err) { next(err) }
     }
 
@@ -98,14 +97,20 @@ function gettingJudgesController(judgesServices, eventsService) {
                     projectsEvaluated.push(pid)
                 }
             }
-
-            // // // console.log("projectsNotEvaluated", projectsNotEvaluated);
-            // // // console.log("projectsEvaluated", projectsEvaluated);
             const mergedProjects = { projectsNotEvaluated, projectsEvaluated };
             res.status(200).json(mergedProjects);
         } catch (err) { next(err) }
     }
 
+    async function getResultFromTableName(req, res, next){
+        try {
+            const { table_name } = req.params;
+            const result = await judgesServices.getResultFromTableName(table_name);
+            res.json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
 
     return {
         getJudgeFromToken,
@@ -115,7 +120,8 @@ function gettingJudgesController(judgesServices, eventsService) {
         getAllocatedProjects,
         getJudgeFromJid,
         modifySlots,
-        getAllocatedProjectsofJudge
+        getAllocatedProjectsofJudge,
+        getResultFromTableName,
     }
 }
 

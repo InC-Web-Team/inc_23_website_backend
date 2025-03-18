@@ -1,4 +1,4 @@
-const roles = ['WEB_MASTER', 'ADMIN', 'PAYMENTS', 'CONCEPTS_ADMIN', 'IMPETUS_ADMIN', 'PRADNYA_ADMIN', 'JUDGE']
+const roles = ['WEB_MASTER', 'ADMIN', 'VIEWER', 'PAYMENTS', 'CONCEPTS_ADMIN', 'IMPETUS_ADMIN', 'PRADNYA_ADMIN', 'JUDGE']
 
 const groupLinks = new Map([
     ['concepts', ['Concepts Judging (InC\'24)', 'https://chat.whatsapp.com/D9ySvNZzL1HL4Vk30pKyGv']],
@@ -7,15 +7,19 @@ const groupLinks = new Map([
 
 const officialEmails = new Map([
     ['queries', 'queries.pictinc2024@gmail.com'],
-    ['judging', 'incjudging@pict.edu'],
+    ['info', 'info.pictinc@gmail.com'],
+    ['judging', 'incjudging@pict.edu'], 
     ['concepts', 'concepts.pictinc2023@gmail.com'],
-    ['impetus', 'impetus.pictinc2024@gmail.com'],
+    ['impetus', 'impetus2025@gmail.com'],
     ['pradnya', 'pradnya.pictinc2023@gmail.com'],
     ['official', 'inc@pict.edu']
 ])
 
-
-
+const whatsappLinks = new Map([
+  ['impetus', 'https://chat.whatsapp.com/CjqqvrD2TAnHXrr4iVyjlf'],
+  ['concepts', 'https://chat.whatsapp.com/FXFSXwc285dADXNeLy7N1C'],
+  ['pradnya', 'https://chat.whatsapp.com/DxWfPhRTrhi2eCU3NMdloL'],
+])
 
 const projects = [
     {
@@ -1351,4 +1355,5 @@ export {
     officialEmails,
     projects,
     projectsDomain2,
+    whatsappLinks,
 }

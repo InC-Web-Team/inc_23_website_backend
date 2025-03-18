@@ -1,6 +1,7 @@
 import { sendCookie, randomID, AppError } from "../../utils/index.js";
 import { eventsName, teamSize, projectTypes } from "../../static/eventsData.mjs";
 import { pictDetails } from "../../static/collegeDetails.mjs";
+import { whatsappLinks } from "../../static/adminData.mjs";
 
 function createRegistrationsController(
   eventsServices,
@@ -10,13 +11,11 @@ function createRegistrationsController(
   async function saveProject(req, res, next) {
     try {
       const { event_name, ticket } = req.query;
-      // // // console.log('req body ', req.body)
-      if (ticket) {
-        // // // console.log('here1')
+      const isTicketExists = await eventsServices.getTicketDetails(ticket);
+      if (isTicketExists) {
         await eventsServices.editStepData(ticket, 1, req.body);
         res.status(200).json({success: true, ticket}).end()
       } else {
-        // // // console.log('here2')
         const ticket = "INC-" + event_name[0].toUpperCase() + randomID(12);
         await eventsServices.insertTicket({
           ticket,
@@ -24,8 +23,7 @@ function createRegistrationsController(
           step_2: {},
           step_no: 1,
         });
-        sendCookie(res, { ticket }, `/register/${event_name}`)
-          .status(200).json({success: true, ticket}).end()
+        res.status(201).json({success: true, ticket}).end()
       }
     } catch (err) {
       next(err);
@@ -37,24 +35,21 @@ function createRegistrationsController(
       const { event_name, ticket } = req.query;
 
       const { email } = req.body;
-      // console.log(email, event_name, ticket)
-
+      
       const user_email = await eventsServices.getUserRegistration(
         event_name,
         email
       );
 
-      // console.log('mail ', user_email)
-
       if (user_email)
         throw new AppError(
           404,
           "fail",
-          `Email ${user_email.email} already registered for ${event_name}`
+          `Email ${email} already registered for ${event_name}`
         );
       const member_id_file = req.file;
-      if (event_name === eventsName[2] && !ticket) {
-        // // console.log('in here')
+      const isTicketExists = await eventsServices.getTicketDetails(ticket);
+      if (event_name === eventsName[2] && !isTicketExists) {
         const ticket = "INC-" + event_name[0].toUpperCase() + randomID(12);
         await eventsServices.insertTicket({
           ticket,
@@ -62,16 +57,14 @@ function createRegistrationsController(
           step_2: [{ ...req.body }],
           step_no: 2,
         });
-        // // console.log(ticket)
-        await filesServices.insertFile(email, member_id_file);
-        sendCookie(res, { ticket }, `/register/${event_name}`)
-          .status(201).json({success: true, ticket}).end();
+        // IMP
+        if(member_id_file) await filesServices.insertFile(email, member_id_file);
+        res.status(201).json({success: true, ticket}).end();
         return;
       }
       const existing_members = await eventsServices.getMembersFromTicket(
         ticket
       );
-      // // console.log('existing mems ', existing_members)
       if (!existing_members)
         throw new AppError(404, "fail", "Ticket does not exist");
       if (Array.isArray(existing_members.step_2)) {
@@ -86,18 +79,17 @@ function createRegistrationsController(
                 "Duplicate email address found in a team"
               );
           });
-          await filesServices.insertFile(email, member_id_file);
+          if(member_id_file) await filesServices.insertFile(email, member_id_file);
           await eventsServices.editStepData(ticket, 2, [
             ...existing_members.step_2,
             req.body,
           ]);
         }
       } else {
-        await filesServices.insertFile(email, member_id_file);
+        if(member_id_file) await filesServices.insertFile(email, member_id_file);
         await eventsServices.editStepData(ticket, 2, [{ ...req.body }]);
       }
-      sendCookie(res, { ticket }, `/register/${event_name}`)
-        .status(200).json({success: true, ticket}).end()
+      res.status(200).json({success: true, ticket}).end()
     } catch (err) {
       next(err);
     }
@@ -160,7 +152,6 @@ function createRegistrationsController(
     try {
       let { ticket, index } = req.query;
       // let { index } = req.body; // Assuming memberID is the key for the member details to delete
-      // // console.log(req.query)
       await eventsServices.deleteMemberDetails(ticket, Number(index));
       res.status(200).json({ message: 'Member details deleted successfully', success: true, ticket });
     } catch (error) {
@@ -176,8 +167,7 @@ function createRegistrationsController(
         req.body = { ...req.body, ...pictDetails };
       }
       await eventsServices.editStepData(ticket, 3, req.body);
-      sendCookie(res, { ticket }, `/register/${event_name}`)
-        .status(200).json({success: true, ticket}).end()
+      res.status(200).json({success: true, ticket}).end()
     } catch (err) {
       next(err);
     }
@@ -186,7 +176,6 @@ function createRegistrationsController(
   async function requestRegistration(req, res, next) {
     try {
       const { event, ticket } = req.query;
-      // // console.log(ticket);
       let results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.payment_id !== "")
@@ -205,7 +194,12 @@ function createRegistrationsController(
         } else if (isInternational === "1") {
           req.body = { ...req.body, payment_id: "INTERNATIONAL" };
         }
-        // // console.log(techfiesta, team_id);
+        else {
+          const dbPaymentId = await eventsServices.checkPaymentIdExist(req.body.payment_id);
+          if(dbPaymentId.trim() === req.body.payment_id.trim()){
+            throw new AppError(400, "fail", "Transaction ID already used");
+          }
+        }
         req.body = { ...req.body, team_id: team_id || '' };
         await eventsServices.saveRegistrationDetails({ ...req.body, ticket, event }, 4);
         res.status(201).json({success: true, ticket}).end()
@@ -225,22 +219,26 @@ function createRegistrationsController(
     try {
       const { ticket } = req.body;
       const { event_name } = req.params;
-
-      // // console.log(ticket, ' ', event_name)
       const results = await eventsServices.getTicketDetails(ticket);
       if (!results) throw new AppError(404, "fail", "Ticket does not exist");
       if (results.step_no === 4) {
-
         const { pid } = await eventsServices.completeRegistration(
           event_name,
           results
         );
-        // // console.log('pid ', pid)
-        // await emailService.eventRegistrationEmail(event_name, {
-        //   ...results,
-        //   pid,
-        // });
-        res.status(201).end();
+        const formattedEventName = event_name[0].toUpperCase() + event_name.slice(1);
+        let formattedEmail = '';
+        if(Array.isArray(results.step_2)){
+          formattedEmail = results.step_2.map((member) => `${member.name} <${member.email}>`).slice(0, 2).join(',');
+        }
+        const whatsapp_url = whatsappLinks.get(event_name);
+        await emailService.eventRegistrationEmail(formattedEventName, {
+          ...results,
+          email: formattedEmail,
+          whatsapp_url,
+          pid,
+        });
+        res.status(201).json({success: true}).end();
       } else if (results.step_no === 5 && results.payment_id !== "")
         throw new AppError(
           400,
@@ -304,6 +302,18 @@ function createRegistrationsController(
     }
   }
 
+  async function getAllTeamLeaders(req, res, next){
+    try {
+      // const results = await eventsServices.getAllTeamLeaders();
+
+      console.log('starting job to send mails');
+      
+      return res.json('mails sent successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   return {
     saveProject,
     insertMember,
@@ -316,6 +326,7 @@ function createRegistrationsController(
     deleteMember,
     getTechfiestaMembers,
     addTechfiestaMembers,
+    getAllTeamLeaders,
 
   };
 }

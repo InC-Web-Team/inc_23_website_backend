@@ -33,7 +33,6 @@ function judgesServices(db) {
 
   async function insertJudge(data) {
     try {
-      // // // console.log(data)
       await db.execute(
         { sql: judgesQueries.insertJudge, namedPlaceholders: true },
         data
@@ -48,7 +47,7 @@ function judgesServices(db) {
           "Judge already exists for given email-phone combination"
         );
       }
-      throw new AppError(400, "fail", err.sqlMessage);
+      else throw new AppError(400, "fail", err.sqlMessage);
     }
   }
 
@@ -86,7 +85,6 @@ function judgesServices(db) {
 
   async function getAllocatedProjects(jid) {
     try {
-      // // // console.log(jid)
       const [conceptsResults] = await db
         .execute(judgesQueries.getAllocatedProjects(jid, eventsName[0]))
         .catch((err) => {
@@ -119,21 +117,18 @@ function judgesServices(db) {
       switch (event_name) {
         case eventsName[1]:
           await db.execute({ sql: judgesQueries.insertImpetusEvaluation, namedPlaceholders: true }, data).catch(err => {
-
             throw new AppError(400, 'fail', err.sqlMessage)
           })
-          break
-
+          break;
         case eventsName[0]:
           await db.execute({ sql: judgesQueries.insertConceptsEvaluation, namedPlaceholders: true }, data).catch(err => {
             throw new AppError(400, 'fail', err.sqlMessage)
           })
-          break
-
+          break;
         default:
           throw new AppError(400, "fail", "Invalid event name")
       }
-      return
+      return;
     } catch (err) {
       throw err
     }
@@ -156,8 +151,6 @@ function judgesServices(db) {
         sql: `SELECT * FROM judge_allocations WHERE jid = ?`, // Complete the SQL query
         values: [jid] // Include jid in the values array
       });
-
-      // // // console.log(results);
 
       return results;
     } catch (err) {
@@ -187,8 +180,17 @@ function judgesServices(db) {
     }
   }
 
-
-
+  async function getResultFromTableName(table_name){
+    try {
+      const [results] = await db.execute(judgesQueries.getResultFromTableName(table_name))
+      .catch(err => {
+        throw new AppError(400, 'fail', err.sqlMessage)
+      })
+      return results;
+    } catch (err) {
+      throw err
+    }
+  }
 
   return {
     loginJudge,
@@ -201,7 +203,9 @@ function judgesServices(db) {
     evaluateProject,
     existingAllocation,
     getAllocatedProjectsofJudge,
-    getProjectsNotEvaluatedByJudge
+    getProjectsNotEvaluatedByJudge,
+    getResultFromTableName,
+
   }
 }
 

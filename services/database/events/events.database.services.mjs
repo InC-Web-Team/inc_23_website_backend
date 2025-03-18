@@ -38,8 +38,6 @@ function eventsServices(db) {
         });
       return results[0];
     } catch (err) {
-      // // // console.log(err);
-      // // // console.log(err);
       throw err;
     }
   }
@@ -98,8 +96,8 @@ function eventsServices(db) {
     try {
       const [results] = await db
         .execute(
-          { sql: ticketQueries.getPayment, namedPlaceholders: true },
-          { pid, event_name: event_name[0].toUpperCase() }
+          ticketQueries.getPayment,
+          [event_name[0].toUpperCase(), pid]
         )
         .catch((err) => {
           throw new AppError(400, "fail", err.sqlMessage);
@@ -178,6 +176,39 @@ function eventsServices(db) {
     }
   }
 
+  async function getAllTeamLeaders(){
+    try {
+      const [results] = await db.execute(`SELECT * FROM inc_2025.judges j INNER JOIN inc_2025.admin a ON a.username = j.email WHERE j.jid IN ('CO-Jf9e118a', 'CO-Jab693db');`).catch((err) => console.log(err));
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function countTicketCategories() {
+    try {
+      const [results] = await db.execute('CALL countTicketCategories();')
+      .catch((err) => {
+        throw new AppError(400, "fail", err.sqlMessage);
+      })
+      return results[0]
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function checkPaymentIdExist(payment_id) {
+    try {
+      const [results] = await db.execute(ticketQueries.checkPaymentIdExist, [payment_id])
+      .catch((err) => {
+        throw new AppError(400, "fail", err.sqlMessage);
+      })
+      return results[0]?.payment_id || '';
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async function completeRegistration(event_name, data) {
     try {
       const {
@@ -220,7 +251,6 @@ function eventsServices(db) {
       const techfiesta = '';
       const department = '';
 
-      // // console.log('here after data')
       let dataArray = [];
       switch (event_name) {
         case eventsName[0]:
@@ -664,12 +694,6 @@ function eventsServices(db) {
           }
           break;
       }
-      // // // console.log(data);
-      // // // console.log(eventsQueries.completeRegistration(event_name, step_2.length));
-      // // // console.log("dataArray = ", dataArray.length);
-
-      // // console.log(dataArray);
-      
       const [[results]] = await db
         .execute(
           eventsQueries.completeRegistration(event_name, step_2.length),
@@ -688,6 +712,21 @@ function eventsServices(db) {
     try {
       const [results] = await db
         .execute(ticketQueries.getPendingPayments, [
+          event_name[0].toUpperCase(),
+        ])
+        .catch((err) => {
+          throw new AppError(400, "fail", err.sqlMessage);
+        });
+      return results[0];
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async function getIncompleteRegistrations(event_name) {
+    try {
+      const [results] = await db
+        .execute(ticketQueries.getIncompleteRegistrations, [
           event_name[0].toUpperCase(),
         ])
         .catch((err) => {
@@ -727,14 +766,25 @@ function eventsServices(db) {
     }
   }
 
-
-
-
   async function getProjects(event_name) {
     try {
       const [results] = await db
         .execute(eventsQueries.getProjects(event_name))
         .catch((err) => {
+          throw new AppError(400, "fail", err.sqlMessage);
+        });
+      return results;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async function getProjectsByTeamIds(event_name, team_ids) {
+    try {
+      const [results] = await db
+        .execute(eventsQueries.getProjectsByTeamIds(event_name, team_ids))
+        .catch((err) => {
+          console.log(err);
           throw new AppError(400, "fail", err.sqlMessage);
         });
       return results;
@@ -765,14 +815,11 @@ function eventsServices(db) {
           data
         )
         .catch((err) => {
-          // // // console.log(err);
-
           throw new AppError(400, "fail", err.sqlMessage);
         });
 
       return results[0];
     } catch (err) {
-      // // // console.log(err);
       throw err;
     }
   }
@@ -1037,6 +1084,26 @@ function eventsServices(db) {
     }
   }
 
+  async function getAllTicketsCountForBackup(lastBackupTimestamp){
+    try {
+      const [results] = await db.execute(eventsQueries.getAllTicketsCountForBackup(), [lastBackupTimestamp])
+      .catch(err => {throw new AppError(400, 'fail', err.sqlMessage)}); 
+      return results[0].total;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function getAllTicketsForBackup(lastBackupTimestamp, BATCH_SIZE, offset){
+    try {
+      const [results] = await db.execute(eventsQueries.getAllTicketsForBackup(), [lastBackupTimestamp, BATCH_SIZE, offset])
+      .catch(err => {throw new AppError(400, 'fail', err.sqlMessage)}); 
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // async function insertBackup(results) {
   //   try {
   //     for (const backupData of results) {
@@ -1121,7 +1188,14 @@ function eventsServices(db) {
     insertBackup,
     getTechfiestaMembersFromId,
     saveRegistrationDetails,
-    
+    getAllTeamLeaders,
+    countTicketCategories,
+    getAllTicketsCountForBackup,
+    getAllTicketsForBackup,
+    checkPaymentIdExist,
+    getIncompleteRegistrations,
+    getProjectsByTeamIds,
+
   };
 }
 

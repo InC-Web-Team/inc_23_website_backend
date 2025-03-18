@@ -114,3 +114,5 @@ test
 uploads
 
 .ssh
+
+ca-cert.pem

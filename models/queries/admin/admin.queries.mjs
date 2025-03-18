@@ -1,5 +1,5 @@
 function adminQueries(tableName) {
-  const findAdmin = `SELECT * FROM ${tableName} WHERE username = ?;`
+  const findAdmin = `CALL getAdminInfo(?);`
 
   return {
     findAdmin,

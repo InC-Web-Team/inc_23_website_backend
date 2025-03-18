@@ -9,7 +9,8 @@ function createAdminRouter(adminServices, docServices, middlewares, adminValidat
     const { adminLoginValidation, createAdminValidation, verifyAdminTicket, verifyAdminValidation } = adminValidations
     const { loginAdmin, verifyAdminLogin, logout } = adminController(adminServices, docServices, judgesServices)
     adminRouter.get('/verify', verifyAdminTicket(), validator, verifyAdminLogin)
-    adminRouter.use(registrationLimiter)
+    // adminRouter.use(registrationLimiter)
+
     adminRouter.post('/login', adminLoginValidation(), validator, loginAdmin)
     adminRouter.get('/logout', validator, logout)
 
