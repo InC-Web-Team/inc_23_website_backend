@@ -69,7 +69,7 @@ function createSynopsis(projects, event_name) {
     },
 
     header: function(currentPage) {
-      if (currentPage <= pageOffset || currentPage === docDefinition.content.length) {
+      if (currentPage <= pageOffset || currentPage === pageCount) {
         return null;
       }
       
