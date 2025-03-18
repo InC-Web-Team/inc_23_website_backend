@@ -28,14 +28,19 @@ const printer = new PdfPrinter({
 function createSynopsis(projects, event_name) {
   const coverImages = {
     cover1_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/cover1_concepts.jpeg')),
-    cover1_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/cover1_impetus.png')),
+    cover1_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/cover1_impetus.jpg')),
     cover2: readFileSync(path.join(__dirname, 'static/cover-pages/cover2.jpeg')),
     cover3: readFileSync(path.join(__dirname, 'static/cover-pages/cover3.jpeg')),
     cover4: readFileSync(path.join(__dirname, 'static/cover-pages/cover4.jpeg')),
     cover5: readFileSync(path.join(__dirname, 'static/cover-pages/cover5.jpeg')),
-    cover6: readFileSync(path.join(__dirname, 'static/cover-pages/cover6.jpeg')),
-    cover7_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/cover7_concepts.jpeg')),
-    cover7_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/cover7_impetus.png')),
+    cover6: readFileSync(path.join(__dirname, 'static/cover-pages/cover6.jpg')),
+    cover7: readFileSync(path.join(__dirname, 'static/cover-pages/cover7.jpg')),
+    cover8: readFileSync(path.join(__dirname, 'static/cover-pages/cover8.jpg')),
+    cover9: readFileSync(path.join(__dirname, 'static/cover-pages/cover9.jpg')),
+    cover10: readFileSync(path.join(__dirname, 'static/cover-pages/cover10.jpg')),
+    cover11: readFileSync(path.join(__dirname, 'static/cover-pages/cover11.jpeg')),
+    cover12_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/cover12_concepts.jpeg')),
+    cover12_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/cover12_impetus.jpg')),
   };
   
   const AD = projects["APPLICATION DEVELOPMENT"];
@@ -50,6 +55,8 @@ function createSynopsis(projects, event_name) {
     return text.replace(/\s+/g, ' ').trim();
   };
 
+  const pageOffset = 11;
+
   const docDefinition = {
     permissions: {
       printing: "highResolution",
@@ -62,7 +69,7 @@ function createSynopsis(projects, event_name) {
     },
 
     header: function(currentPage) {
-      if (currentPage <= 6 || currentPage === docDefinition.content.length) {
+      if (currentPage <= pageOffset || currentPage === docDefinition.content.length) {
         return null;
       }
       
@@ -100,7 +107,7 @@ function createSynopsis(projects, event_name) {
     },
     
     footer: function(currentPage, pageCount) {
-      if (currentPage <= 6 || currentPage === pageCount) {
+      if (currentPage <= pageOffset || currentPage === pageCount) {
         return null;
       }
       
@@ -118,7 +125,7 @@ function createSynopsis(projects, event_name) {
           ],
         },
         {
-          text: `${currentPage - 6} of ${pageCount - 7}`,
+          text: `${currentPage} of ${pageCount}`,
           fontSize: 10,
           italics: true,
           alignment: "center",
@@ -170,7 +177,41 @@ function createSynopsis(projects, event_name) {
         height: 842,
         pageBreak: 'after'
       },
-      
+      {
+        image: coverImages.cover7,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover8,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover9,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover10,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover11,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
       // TOC header
       {
         toc: {
@@ -520,7 +561,7 @@ function createSynopsis(projects, event_name) {
       ]),
       
       {
-        image: event_name?.toLowerCase() === 'impetus' ? coverImages.cover7_impetus : coverImages.cover7_concepts,
+        image: event_name?.toLowerCase() === 'impetus' ? coverImages.cover12_impetus : coverImages.cover12_concepts,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
