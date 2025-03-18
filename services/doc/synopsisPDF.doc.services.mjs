@@ -27,22 +27,25 @@ const printer = new PdfPrinter({
 
 function createSynopsis(projects, event_name) {
   const coverImages = {
-    cover1_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/cover1_concepts.jpeg')),
-    cover1_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/cover1_impetus.jpg')),
-    cover2: readFileSync(path.join(__dirname, 'static/cover-pages/cover2.jpeg')),
-    cover3: readFileSync(path.join(__dirname, 'static/cover-pages/cover3.jpeg')),
-    cover4: readFileSync(path.join(__dirname, 'static/cover-pages/cover4.jpeg')),
-    cover5: readFileSync(path.join(__dirname, 'static/cover-pages/cover5.jpeg')),
-    cover6: readFileSync(path.join(__dirname, 'static/cover-pages/cover6.jpg')),
-    cover7: readFileSync(path.join(__dirname, 'static/cover-pages/cover7.jpg')),
-    cover8: readFileSync(path.join(__dirname, 'static/cover-pages/cover8.jpg')),
-    cover9: readFileSync(path.join(__dirname, 'static/cover-pages/cover9.jpg')),
-    cover10: readFileSync(path.join(__dirname, 'static/cover-pages/cover10.jpg')),
-    cover11: readFileSync(path.join(__dirname, 'static/cover-pages/cover11.jpeg')),
-    cover12_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/cover12_concepts.jpeg')),
-    cover12_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/cover12_impetus.jpg')),
+    cover1_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/1.jpg')),
+    cover1_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/2.jpg')),
+    cover2: readFileSync(path.join(__dirname, 'static/cover-pages/3.jpg')),
+    cover3: readFileSync(path.join(__dirname, 'static/cover-pages/4.jpg')),
+    cover4: readFileSync(path.join(__dirname, 'static/cover-pages/5.jpg')),
+    cover5: readFileSync(path.join(__dirname, 'static/cover-pages/6.jpg')),
+    cover6: readFileSync(path.join(__dirname, 'static/cover-pages/7.jpg')),
+    cover7: readFileSync(path.join(__dirname, 'static/cover-pages/8.jpg')),
+    cover8: readFileSync(path.join(__dirname, 'static/cover-pages/9.jpg')),
+    cover9: readFileSync(path.join(__dirname, 'static/cover-pages/10.jpg')),
+    cover10: readFileSync(path.join(__dirname, 'static/cover-pages/11.jpg')),
+    cover11: readFileSync(path.join(__dirname, 'static/cover-pages/12.jpg')),
+    cover12: readFileSync(path.join(__dirname, 'static/cover-pages/13.jpg')),
+    cover13: readFileSync(path.join(__dirname, 'static/cover-pages/14.jpg')),
+    cover14: readFileSync(path.join(__dirname, 'static/cover-pages/15.jpg')),
+    cover15_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/16.jpg')),
+    cover15_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/17.jpg')),
   };
-  
+
   const AD = projects["APPLICATION DEVELOPMENT"];
   const CN = projects["COMMUNICATION NETWORKS AND SECURITY SYSTEMS"];
   const DS = projects["DIGITAL / IMAGE/ SPEECH / VIDEO PROCESSING"];
@@ -55,7 +58,8 @@ function createSynopsis(projects, event_name) {
     return text.replace(/\s+/g, ' ').trim();
   };
 
-  const pageOffset = 11;
+  const frontPageOffset = 4;
+  const backPageOffset = 11;
 
   const docDefinition = {
     permissions: {
@@ -68,8 +72,8 @@ function createSynopsis(projects, event_name) {
       documentAssembly: true,
     },
 
-    header: function(currentPage) {
-      if (currentPage <= pageOffset || currentPage === pageCount) {
+    header: function(currentPage, pageCount) {
+      if (currentPage <= frontPageOffset || currentPage >= pageCount-backPageOffset) {
         return null;
       }
       
@@ -107,7 +111,7 @@ function createSynopsis(projects, event_name) {
     },
     
     footer: function(currentPage, pageCount) {
-      if (currentPage <= pageOffset || currentPage === pageCount) {
+      if (currentPage <= frontPageOffset || currentPage >= pageCount-backPageOffset) {
         return null;
       }
       
@@ -158,55 +162,6 @@ function createSynopsis(projects, event_name) {
       },
       {
         image: coverImages.cover4,
-        absolutePosition: { x: 0, y: 0 },
-        width: 595,
-        height: 842,
-        pageBreak: 'after'
-      },
-      {
-        image: coverImages.cover5,
-        absolutePosition: { x: 0, y: 0 },
-        width: 595,
-        height: 842,
-        pageBreak: 'after'
-      },
-      {
-        image: coverImages.cover6,
-        absolutePosition: { x: 0, y: 0 },
-        width: 595,
-        height: 842,
-        pageBreak: 'after'
-      },
-      {
-        image: coverImages.cover7,
-        absolutePosition: { x: 0, y: 0 },
-        width: 595,
-        height: 842,
-        pageBreak: 'after'
-      },
-      {
-        image: coverImages.cover8,
-        absolutePosition: { x: 0, y: 0 },
-        width: 595,
-        height: 842,
-        pageBreak: 'after'
-      },
-      {
-        image: coverImages.cover9,
-        absolutePosition: { x: 0, y: 0 },
-        width: 595,
-        height: 842,
-        pageBreak: 'after'
-      },
-      {
-        image: coverImages.cover10,
-        absolutePosition: { x: 0, y: 0 },
-        width: 595,
-        height: 842,
-        pageBreak: 'after'
-      },
-      {
-        image: coverImages.cover11,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
@@ -559,13 +514,81 @@ function createSynopsis(projects, event_name) {
           margin: [0, 15, 0, 15],
         },
       ]),
-      
       {
-        image: event_name?.toLowerCase() === 'impetus' ? coverImages.cover12_impetus : coverImages.cover12_concepts,
+        image: coverImages.cover5,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'before'
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover6,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover7,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover8,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover9,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover10,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover11,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover12,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover13,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: coverImages.cover14,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'after'
+      },
+      {
+        image: event_name?.toLowerCase() === 'impetus' ? coverImages.cover15_impetus : coverImages.cover15_concepts,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
       }
     ],
     
