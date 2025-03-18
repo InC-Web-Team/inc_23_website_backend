@@ -89,7 +89,6 @@ function allocationServices(db) {
         }
     }
 
-
     async function deallocate(event_name, data) {
         try {
             const [results] = await db.execute(allocationQueries.deallocate(event_name, data.pids, data.jids)).catch(err => {
