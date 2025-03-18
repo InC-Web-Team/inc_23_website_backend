@@ -61,7 +61,7 @@ function emailService() {
      *
      * @param {string} event_name - Name of the event.
      * @param {Object} data - Registration data including team id, email, and WhatsApp URL.
-     * @returns {Promise<string>} A message indicating success.
+     * @returns {Promise<string>} A message indicating success or error.
      */
     async function eventRegistrationEmail(event_name, data) {
         try {
@@ -84,7 +84,7 @@ function emailService() {
                 html: await emailTemplates.eventRegistrationEmail(dynamicData),
             };
             // Send the email and log any errors during sending
-            eventEmailTransporter.sendMail(mailOptions)
+            await eventEmailTransporter.sendMail(mailOptions)
                 .then(() => {
                     console.log("Email sent successfully in eventRegistrationEmail.");
                 })
@@ -94,7 +94,8 @@ function emailService() {
             return "Emails sent successfully";
         } catch (err) {
             console.error("Error in eventRegistrationEmail:", err);
-            throw err;
+            // Return an error message instead of throwing
+            return "Error sending event registration email";
         }
     }
 
@@ -102,7 +103,7 @@ function emailService() {
      * Sends a judge registration email with dynamic judge details.
      *
      * @param {Object} judge - The judge object containing details and assigned events.
-     * @returns {Promise<string>} A message indicating success.
+     * @returns {Promise<string>} A message indicating success or error.
      */
     async function judgeRegistrationEmail(judge) {
         try {
@@ -127,17 +128,17 @@ function emailService() {
                 html: await emailTemplates.judgeRegistrationEmail(judge)
             };
             // Send the email and log any errors during sending
-            eventEmailTransporter.sendMail(mailOptions)
+            await eventEmailTransporter.sendMail(mailOptions)
                 .then(() => {
                     console.log("Email sent successfully in judgeRegistrationEmail.");
                 })
                 .catch((e) => {
                     console.error("Error in judgeRegistrationEmail - sendMail:", e);
                 });
-            return "judging mail sent successfully";
+            return "Judging mail sent successfully";
         } catch (err) {
             console.error("Error in judgeRegistrationEmail:", err);
-            throw err;
+            return "Error sending judge registration email";
         }
     }
 
@@ -196,23 +197,22 @@ function emailService() {
                             `
                         };
 
-                        // Push each sendMail promise to the array with error logging
                         allEmailPromises.push(
                             bulkEmailTransporter.sendMail(mailOptions)
                                 .then(() => {
-                                    console.log(`mail sent - ${item.email}`);
+                                    console.log(`Mail sent to ${item.email}`);
                                 })
                                 .catch((e) => {
                                     console.error("Error in sendBulkEmail - sendMail:", e);
                                 })
                         );
-                        // Await for all promises in the current batch to settle
-                        await Promise.allSettled(allEmailPromises);
-                        console.log('completed bulk batch');
                     }
+                    // Await for all promises in the current batch to settle
+                    await Promise.allSettled(allEmailPromises);
+                    console.log('Completed bulk batch');
                 } catch (batchErr) {
                     console.error("Error in executeSendMail (sendBulkEmail):", batchErr);
-                    throw batchErr;
+                    // Do not throw error further
                 }
             };
 
@@ -220,13 +220,13 @@ function emailService() {
             for (let i = 0; i < data.length; i += BATCH_SIZE) {
                 const emailArray = data.slice(i, i + BATCH_SIZE);
                 setTimeout(() => {
-                    console.log(`sending batch - ${i / BATCH_SIZE}`);
+                    console.log(`Sending batch - ${i / BATCH_SIZE}`);
                     executeSendMail(emailArray);
                 }, 5000 * (i / BATCH_SIZE));
             }
         } catch (err) {
             console.error("Error in sendBulkEmail:", err);
-            throw err;
+            // Do not rethrow to prevent server crash
         }
     }
 
@@ -242,31 +242,10 @@ function emailService() {
      */
     async function sendAllocationEmail(event_name, projects, judge, judgeCredentials) {
         try {
-            // The code below is commented out as it may be implemented later:
-            // judge.slots = judge.slots.map(slot => slotsData[slot])
-            // projects.forEach(project => {
-            //     project.domain = projectDomains[project.domain]
-            // })
-            // event_name = event_name.charAt(0).toUpperCase() + event_name.slice(1)
-            // const mailOptions = {
-            //     from: `InC\'2024 Judging <${officialEmails.get('judging')}>`,
-            //     to: `${judge.name} ${judge.email}`,
-            //     cc: officialEmails.get('official'),
-            //     replyTo: officialEmails.get('judging'),
-            //     subject: `Updated Judging Schedule for PICT InC 2024 - ${event_name}`,
-            //     priority: 'high',
-            //     text: 'Email content',
-            //     html: await emailTemplates.sendAllocationEmail(event_name, projects, judge, judgeCredentials)
-            // }
-            // return judgingEmailTransporter.sendMail(mailOptions, (err, info) => {
-            //     if (err) {
-            //         throw err
-            //     }
-            //     return info
-            // })
+            // Future implementation goes here...
         } catch (err) {
             console.error("Error in sendAllocationEmail:", err);
-            throw err;
+            // Do not throw error further
         }
     }
 
