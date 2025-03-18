@@ -6,7 +6,13 @@ import { writeFileSync } from 'fs';
 
 const env = process.env
 
+/**
+ * Provides email services for various event and judge-related notifications.
+ *
+ * @returns {Object} An object containing email service functions.
+ */
 function emailService() {
+    // Create a transporter for event-related emails using Gmail
     const eventEmailTransporter = nodemailer.createTransport({
         pool: true,
         service: 'gmail',
@@ -18,8 +24,9 @@ function emailService() {
         tls: {
             rejectUnauthorized: false
         }
-    })
+    });
 
+    // Create a transporter for bulk emails with additional pooling options
     const bulkEmailTransporter = nodemailer.createTransport({
         service: 'gmail',
         port: 465,
@@ -35,6 +42,7 @@ function emailService() {
         }
     });
 
+    // Create a transporter for judging-related emails using Gmail
     const judgingEmailTransporter = nodemailer.createTransport({
         pool: true,
         service: 'gmail',
@@ -46,16 +54,25 @@ function emailService() {
         tls: {
             rejectUnauthorized: false
         }
-    })
+    });
 
+    /**
+     * Sends an event registration email with dynamic content.
+     *
+     * @param {string} event_name - Name of the event.
+     * @param {Object} data - Registration data including team id, email, and WhatsApp URL.
+     * @returns {Promise<string>} A message indicating success.
+     */
     async function eventRegistrationEmail(event_name, data) {
         try {
+            // Prepare dynamic content for the email template
             const dynamicData = {
-                    event_name,
-                    team_id: data.pid,
-                    tentative_dates: "21st - 23rd March",
-                    whatsapp_url: data.whatsapp_url,
-            }
+                event_name,
+                team_id: data.pid,
+                tentative_dates: "21st - 23rd March",
+                whatsapp_url: data.whatsapp_url,
+            };
+            // Define email options
             const mailOptions = {
                 from: `InC 2025 <${officialEmails.get('info')}>`,
                 to: data.email,
@@ -66,21 +83,38 @@ function emailService() {
                 text: 'Email content',
                 html: await emailTemplates.eventRegistrationEmail(dynamicData),
             };
-            eventEmailTransporter.sendMail(mailOptions).then(() => {}).catch((e) => {console.log(e)});
+            // Send the email and log any errors during sending
+            eventEmailTransporter.sendMail(mailOptions)
+                .then(() => {
+                    console.log("Email sent successfully in eventRegistrationEmail.");
+                })
+                .catch((e) => {
+                    console.error("Error in eventRegistrationEmail - sendMail:", e);
+                });
             return "Emails sent successfully";
         } catch (err) {
+            console.error("Error in eventRegistrationEmail:", err);
             throw err;
         }
     }
 
+    /**
+     * Sends a judge registration email with dynamic judge details.
+     *
+     * @param {Object} judge - The judge object containing details and assigned events.
+     * @returns {Promise<string>} A message indicating success.
+     */
     async function judgeRegistrationEmail(judge) {
         try {
+            // Retrieve available judging slots based on judge's event(s)
             const slotsData = getJudgingSlots(judge?.events.toLowerCase());
+            // Convert judge's slot values to corresponding slot labels and format as a comma-separated string
             judge.slots = judge.slots
-            .map(slot => parseInt(slot))
-            .sort((a, b) => a - b)
-            .map(slot => slotsData[slot])
-            .join(", ");
+                .map(slot => parseInt(slot))
+                .sort((a, b) => a - b)
+                .map(slot => slotsData[slot])
+                .join(", ");
+            // Define email options for judge registration
             const mailOptions = {
                 from: `InC 2025 Judging <${officialEmails.get('info')}>`,
                 to: `${judge.name} <${judge.email}>`,
@@ -91,79 +125,124 @@ function emailService() {
                 priority: 'high',
                 text: 'Email content',
                 html: await emailTemplates.judgeRegistrationEmail(judge)
-            }
-            eventEmailTransporter.sendMail(mailOptions).then(() => {}).catch((e) => {console.log(e)});
-            return "judging mail sent successfully"
-        } catch (err) { throw err }
+            };
+            // Send the email and log any errors during sending
+            eventEmailTransporter.sendMail(mailOptions)
+                .then(() => {
+                    console.log("Email sent successfully in judgeRegistrationEmail.");
+                })
+                .catch((e) => {
+                    console.error("Error in judgeRegistrationEmail - sendMail:", e);
+                });
+            return "judging mail sent successfully";
+        } catch (err) {
+            console.error("Error in judgeRegistrationEmail:", err);
+            throw err;
+        }
     }
 
+    /**
+     * Sends bulk emails in batches.
+     *
+     * @param {Array<Object>} data - An array of objects containing email and slot information.
+     */
     async function sendBulkEmail(data) {
         try {
-
             const BATCH_SIZE = 50;
 
+            /**
+             * Executes sending emails for a batch.
+             *
+             * @param {Array<Object>} emailArray - An array of email objects for the current batch.
+             */
             const executeSendMail = async (emailArray) => {
-                const allEmailPromises = [];
-
-                for(let item of emailArray){
-                    const mailOptions = {
-                        from: `InC Impetus 2025 <${officialEmails.get('impetus')}>`,
-                        to: `${item.email}`,
-                        cc: 'InC Queries <queries.pictinc2024@gmail.com>',
-                        replyTo: 'InC Queries <queries.pictinc2024@gmail.com>',
-                        subject: "InC'25 Slot Confirmation - Impetus",
-                        priority: 'high',
-                        text: "Email content",
-                        html: `<!DOCTYPE html>
-                        <html>
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                            <title>INC 25 - Impetus Event Details</title>
-                        </head>
-                        <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-                            <div style="max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-                                <h2 style="text-align: center; color: #333;">You're Invited to INC 25 - Impetus</h2>
-                                <p>Dear Participant,</p>
-                                <p>We are excited to have you at <strong>Impetus</strong>, part of <strong>INC 25</strong>. Below are your event details:</p>
-                                
-                                <div style="background-color: #f4f4f4; padding: 15px; border-radius: 5px;">
-                                    <p><strong>Event:</strong> Impetus</p>
-                                    <p><strong>Date & Time Slot:</strong> <span style="color: #d4621c;"><strong>${item.slot}</strong></span></p>
-                                    <p><strong>Location:</strong> PICT, Pune</p>
+                try {
+                    const allEmailPromises = [];
+                    for (let item of emailArray) {
+                        const mailOptions = {
+                            from: `InC Impetus 2025 <${officialEmails.get('impetus')}>`,
+                            to: `${item.email}`,
+                            cc: 'InC Queries <queries.pictinc2024@gmail.com>',
+                            replyTo: 'InC Queries <queries.pictinc2024@gmail.com>',
+                            subject: "InC'25 Slot Confirmation - Impetus",
+                            priority: 'high',
+                            text: "Email content",
+                            html: `<!DOCTYPE html>
+                            <html>
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>INC 25 - Impetus Event Details</title>
+                            </head>
+                            <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+                                <div style="max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                                    <h2 style="text-align: center; color: #333;">You're Invited to INC 25 - Impetus</h2>
+                                    <p>Dear Participant,</p>
+                                    <p>We are excited to have you at <strong>Impetus</strong>, part of <strong>INC 25</strong>. Below are your event details:</p>
+                                    
+                                    <div style="background-color: #f4f4f4; padding: 15px; border-radius: 5px;">
+                                        <p><strong>Event:</strong> Impetus</p>
+                                        <p><strong>Date & Time Slot:</strong> <span style="color: #d4621c;"><strong>${item.slot}</strong></span></p>
+                                        <p><strong>Location:</strong> PICT, Pune</p>
+                                    </div>
+                                    
+                                    <p>Kindly arrive 15 minutes before your scheduled time. If you have any questions, feel free to reach out.</p>
+                                    
+                                    <p>Best Regards,</p>
+                                    <p><strong>INC 25 Impetus Team</strong></p>
                                 </div>
-                                
-                                <p>Kindly arrive 15 minutes before your scheduled time. If you have any questions, feel free to reach out.</p>
-                                
-                                <p>Best Regards,</p>
-                                <p><strong>INC 25 Impetus Team</strong></p>
-                            </div>
-                        </body>
-                        </html>
-                        `
-                    };
-                
-                allEmailPromises.push(
-                    bulkEmailTransporter.sendMail(mailOptions).then((e) => {console.log(`mail sent - ${item.email}`)}).catch((e) => {console.log(e)})
-                );
-                await Promise.allSettled(allEmailPromises);
-                console.log('completed bulk batch');
-                }
-            }
+                            </body>
+                            </html>
+                            `
+                        };
 
-            for (let i=0; i<data.length; i += BATCH_SIZE) {
-                const emailArray = data.slice(i, i+BATCH_SIZE);
+                        // Push each sendMail promise to the array with error logging
+                        allEmailPromises.push(
+                            bulkEmailTransporter.sendMail(mailOptions)
+                                .then(() => {
+                                    console.log(`mail sent - ${item.email}`);
+                                })
+                                .catch((e) => {
+                                    console.error("Error in sendBulkEmail - sendMail:", e);
+                                })
+                        );
+                        // Await for all promises in the current batch to settle
+                        await Promise.allSettled(allEmailPromises);
+                        console.log('completed bulk batch');
+                    }
+                } catch (batchErr) {
+                    console.error("Error in executeSendMail (sendBulkEmail):", batchErr);
+                    throw batchErr;
+                }
+            };
+
+            // Process data in batches with a delay between each batch
+            for (let i = 0; i < data.length; i += BATCH_SIZE) {
+                const emailArray = data.slice(i, i + BATCH_SIZE);
                 setTimeout(() => {
-                    console.log(`sending batch - ${i/BATCH_SIZE}`);
+                    console.log(`sending batch - ${i / BATCH_SIZE}`);
                     executeSendMail(emailArray);
-                }, 5000*(i/BATCH_SIZE));
+                }, 5000 * (i / BATCH_SIZE));
             }
+        } catch (err) {
+            console.error("Error in sendBulkEmail:", err);
+            throw err;
         }
-        catch (err) { throw err }
     }
 
+    /**
+     * Sends an allocation email for updated judging schedules.
+     * (Currently commented out; retains structure for future implementation.)
+     *
+     * @param {string} event_name - Name of the event.
+     * @param {Array} projects - Array of project details.
+     * @param {Object} judge - Judge details.
+     * @param {Object} judgeCredentials - Credentials for the judge.
+     * @returns {Promise} Resolves with email send information.
+     */
     async function sendAllocationEmail(event_name, projects, judge, judgeCredentials) {
         try {
+            // The code below is commented out as it may be implemented later:
             // judge.slots = judge.slots.map(slot => slotsData[slot])
             // projects.forEach(project => {
             //     project.domain = projectDomains[project.domain]
@@ -185,15 +264,19 @@ function emailService() {
             //     }
             //     return info
             // })
-        } catch (err) { throw err }
+        } catch (err) {
+            console.error("Error in sendAllocationEmail:", err);
+            throw err;
+        }
     }
 
+    // Return the available email service functions
     return {
         eventRegistrationEmail,
         judgeRegistrationEmail,
         sendAllocationEmail,
         sendBulkEmail,
-    }
+    };
 }
 
 export default emailService;
