@@ -42,8 +42,9 @@ function createSynopsis(projects, event_name) {
     cover12: readFileSync(path.join(__dirname, 'static/cover-pages/13.jpg')),
     cover13: readFileSync(path.join(__dirname, 'static/cover-pages/14.jpg')),
     cover14: readFileSync(path.join(__dirname, 'static/cover-pages/15.jpg')),
-    cover15_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/16.jpg')),
-    cover15_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/17.jpg')),
+    cover15: readFileSync(path.join(__dirname, 'static/cover-pages/16.jpg')),
+    cover16_impetus: readFileSync(path.join(__dirname, 'static/cover-pages/17.jpg')),
+    cover16_concepts: readFileSync(path.join(__dirname, 'static/cover-pages/18.jpg')),
   };
 
   const AD = projects["APPLICATION DEVELOPMENT"];
@@ -585,7 +586,14 @@ function createSynopsis(projects, event_name) {
         pageBreak: 'before'
       },
       {
-        image: event_name?.toLowerCase() === 'impetus' ? coverImages.cover15_impetus : coverImages.cover15_concepts,
+        image: coverImages.cover15,
+        absolutePosition: { x: 0, y: 0 },
+        width: 595,
+        height: 842,
+        pageBreak: 'before'
+      },
+      {
+        image: event_name?.toLowerCase() === 'impetus' ? coverImages.cover16_impetus : coverImages.cover16_concepts,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
