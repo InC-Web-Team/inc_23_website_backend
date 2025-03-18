@@ -73,7 +73,7 @@ function createSynopsis(projects, event_name) {
     },
 
     header: function(currentPage, pageCount) {
-      if (currentPage <= frontPageOffset || currentPage > pageCount-backPageOffset+1) {
+      if (currentPage <= frontPageOffset || currentPage > pageCount-backPageOffset) {
         return null;
       }
       
@@ -111,7 +111,7 @@ function createSynopsis(projects, event_name) {
     },
     
     footer: function(currentPage, pageCount) {
-      if (currentPage <= frontPageOffset || currentPage > pageCount-backPageOffset+1) {
+      if (currentPage <= frontPageOffset || currentPage > pageCount-backPageOffset) {
         return null;
       }
       
@@ -526,69 +526,70 @@ function createSynopsis(projects, event_name) {
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover7,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover8,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover9,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover10,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover11,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover12,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover13,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover14,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: event_name?.toLowerCase() === 'impetus' ? coverImages.cover15_impetus : coverImages.cover15_concepts,
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
+        pageBreak: 'before'
       }
     ],
     
