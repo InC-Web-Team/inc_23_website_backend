@@ -73,7 +73,7 @@ function createSynopsis(projects, event_name) {
     },
 
     header: function(currentPage, pageCount) {
-      if (currentPage <= frontPageOffset || currentPage >= pageCount-backPageOffset) {
+      if (currentPage <= frontPageOffset || currentPage > pageCount-backPageOffset+1) {
         return null;
       }
       
@@ -111,7 +111,7 @@ function createSynopsis(projects, event_name) {
     },
     
     footer: function(currentPage, pageCount) {
-      if (currentPage <= frontPageOffset || currentPage >= pageCount-backPageOffset) {
+      if (currentPage <= frontPageOffset || currentPage > pageCount-backPageOffset+1) {
         return null;
       }
       
@@ -519,7 +519,7 @@ function createSynopsis(projects, event_name) {
         absolutePosition: { x: 0, y: 0 },
         width: 595,
         height: 842,
-        pageBreak: 'after'
+        pageBreak: 'before'
       },
       {
         image: coverImages.cover6,
